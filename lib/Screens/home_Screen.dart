@@ -28,8 +28,10 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
+    _tabController = TabController(
+        initialIndex: NewsArticles.tabIndex, length: 2, vsync: this);
     _tabController.addListener(_handleTab);
+    NewsArticles.tabIndex = 0;
   }
 
   _handleTab() {
@@ -70,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTab);
     _tabController.dispose();
     super.dispose();
   }
@@ -77,35 +80,62 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<NewsArticles>(context);
-    return MainScaffold(
-      navigationDrawer: true,
-      title: "Explore",
-      actions: icon,
-      tabBar: TabBar(
-        indicatorColor: Colors.white,
-        tabs: [
-          Tab(text: "What’s Now"),
-          Tab(text: "My News"),
-        ],
-        controller: _tabController,
-      ),
-      body: provider.network
-          ? provider.isLoading
-              ? ShimmerList()
-              : TabBarView(
-                  children: [
-                    WhatsNew(topNews),
-                    MyNews(),
-                  ],
-                  controller: _tabController,
-                )
-          : Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Text(
-                    "You have a network connection error, Please check your connection"),
+    return WillPopScope(
+      onWillPop: () {
+        return showDialog(
+          context: (context),
+          child: AlertDialog(
+            title: new Text('Do you want to exit this application?'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
               ),
-            ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
+        );
+      },
+      child: MainScaffold(
+        navigationDrawer: true,
+        title: "Explore",
+        actions: _tabController.index == 1
+            ? IconButton(
+            icon: Icon(Icons.edit),
+            tooltip: "Edit my news",
+            onPressed: () {
+              Navigator.of(context).pushNamed(EditMyNews.routeName);
+            })
+            : icon,
+        tabBar: TabBar(
+          indicatorColor: Colors.white,
+          tabs: [
+            Tab(text: "What’s Now"),
+            Tab(text: "My News"),
+          ],
+          controller: _tabController,
+        ),
+        body: provider.network
+            ? provider.isLoading
+            ? ShimmerList()
+            : TabBarView(
+          children: [
+            WhatsNew(topNews),
+            MyNews(),
+          ],
+          controller: _tabController,
+        )
+            : Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Text(
+                "You have a network connection error, Please check your connection"),
+          ),
+        ),
+      ),
     );
   }
 }

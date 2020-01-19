@@ -38,7 +38,7 @@ showErrorAlertDialog(String message, context) {
           ),
           actions: <Widget>[
             FlatButton(
-              color: Colors.teal.shade400,
+              color: Colors.red,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),

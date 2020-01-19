@@ -56,7 +56,8 @@ flutter:
     - assets/images/News-me.png
     - assets/images/news-placeholder.png
     - assets/images/onBoardingFinal.png
-  #  - images/a_dot_ham.jpeg
+    - assets/images/NewsMe.png
+    - assets/images/topicselection.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

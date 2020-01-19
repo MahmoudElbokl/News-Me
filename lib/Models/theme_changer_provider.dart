@@ -32,7 +32,6 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
         color: Colors.white, fontSize: 19, fontWeight: FontWeight.w700),
   ),
   appBarTheme: AppBarTheme(
-    color: Color(0xff265b5f),
     textTheme: TextTheme(
       title:
           GoogleFonts.ibarraRealNova(fontSize: 20, fontWeight: FontWeight.w700),
@@ -42,7 +41,8 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
 
 ThemeData lightTheme = ThemeData.light().copyWith(
   appBarTheme: AppBarTheme(
-    color: Color(0xff329388),
+    color: Colors.red,
+//    Color(0xff329388),
     textTheme: TextTheme(
       title:
           GoogleFonts.ibarraRealNova(fontSize: 20, fontWeight: FontWeight.w700),

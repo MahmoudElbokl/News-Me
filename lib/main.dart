@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
       },
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeModel>(context).currentTheme,
-      title: "News.Me",
+      title: "News Me",
       home: _screen,
     );
   }

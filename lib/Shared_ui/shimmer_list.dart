@@ -21,9 +21,11 @@ class ShimmerList extends StatelessWidget {
                         height: MediaQuery.of(context).size.height * 0.25,
                         width: MediaQuery.of(context).size.width * 0.8,
                         decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(15),
+                          ),
+                        ),
                       )
                     : ShimmerLayout(),
                 period: Duration(milliseconds: time),

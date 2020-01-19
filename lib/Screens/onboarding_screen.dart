@@ -8,12 +8,12 @@ import 'package:news_me/Screens/home_Screen.dart';
 class OnBoardingScreen extends StatelessWidget {
   final List<OnBoardingPage> onBoardingPages = [
     OnBoardingPage(
-      image: "assets/images/News-me.png",
+      image: "assets/images/NewsMe.png",
       title: "News.Me",
       details: "One place for all your news",
     ),
     OnBoardingPage(
-      image: "assets/images/onBoardingFinal.png",
+      image: "assets/images/topicselection.png",
       title: "My News feature",
       details: "All your interesting news in one screen",
     ),
@@ -74,7 +74,7 @@ class OnBoardingScreen extends StatelessWidget {
               count: onBoardingPages.length,
               effect: ExpandingDotsEffect(
                 expansionFactor: 2,
-                dotColor: Color(0xff329388),
+                dotColor: Colors.red,
               ),
             ),
           ),
@@ -94,7 +94,7 @@ class OnBoardingScreen extends StatelessWidget {
                   style:
                       Theme.of(context).textTheme.body2.copyWith(fontSize: 20),
                 ),
-                color: Color(0xff329388),
+                color: Colors.red,
                 onPressed: () {
                   _updateSeen();
                   Navigator.of(context)

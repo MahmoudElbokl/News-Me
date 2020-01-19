@@ -12,7 +12,7 @@ import 'package:news_me/utilites.dart';
 class MyNewsSources with ChangeNotifier {
   MyNewsTopicsDb _db = MyNewsTopicsDb();
   bool _isLoad = true;
-  List<NewsSources> _newsSources;
+  List<NewsSources> _newsSources = [];
 
   List<Item> _expansionPanelItems = List.generate(topics.length, (index) {
     return Item(
@@ -43,6 +43,15 @@ class MyNewsSources with ChangeNotifier {
     return _expansionPanelItems;
   }
 
+  returnExpansionToFalse() {
+    _expansionPanelItems = List.generate(topics.length, (index) {
+      return Item(
+        headerValue: topics[index],
+        expandedValue: index.toString(),
+      );
+    });
+  }
+
   expandPanel(index) {
     _expansionPanelItems[index].isExpanded =
         !_expansionPanelItems[index].isExpanded;
@@ -51,27 +60,31 @@ class MyNewsSources with ChangeNotifier {
 
   fetchAllSources() async {
     _isLoad = true;
-    _newsSources = List<NewsSources>();
-    String sourcesApi = sources + apiKey;
-    final response = await http.get(sourcesApi);
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      var allSources = jsonData["sources"];
-      for (var item in allSources) {
-        _newsSources.add(
-          NewsSources(
-            id: item["id"],
-            name: item["name"],
-            category: item["category"],
-          ),
-        );
-      }
-    } else {
+    if (_newsSources.length > 0) {
       _isLoad = false;
-      throw ("error");
+      notifyListeners();
+    } else {
+      String sourcesApi = sources + apiKey;
+      final response = await http.get(sourcesApi);
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        var allSources = jsonData["sources"];
+        for (var item in allSources) {
+          _newsSources.add(
+            NewsSources(
+              id: item["id"],
+              name: item["name"],
+              category: item["category"],
+            ),
+          );
+        }
+      } else {
+        _isLoad = false;
+        throw ("error");
+      }
+      _isLoad = false;
+      notifyListeners();
     }
-    _isLoad = false;
-    notifyListeners();
   }
 
   int checkCategoriesNumberOfSources(sourceIndex, category) {
@@ -103,9 +116,9 @@ class MyNewsSources with ChangeNotifier {
   }
 
   saveOnDataBase() {
+    NewsArticles.dpChanged = true;
     _db.deleteTable();
     int i = -1;
-    NewsArticles.dpChanged = true;
     _topicsActivity.forEach((value) {
       i++;
       if (value == true) {
@@ -120,6 +133,12 @@ class MyNewsSources with ChangeNotifier {
 
   List<bool> get topicsActivity {
     return [..._topicsActivity];
+  }
+
+  returnActiveToFalse() {
+    _topicsActivity = List.generate(topics.length, (index) {
+      return false;
+    });
   }
 
   addTopicToActive(topicIndex) {

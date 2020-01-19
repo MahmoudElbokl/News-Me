@@ -35,14 +35,14 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         color: Provider
             .of<ThemeModel>(context)
             .currentTheme == lightTheme
-            ? Color(0xffD5EEF5)
+            ? Colors.red[100]
             : Colors.grey[850],
         padding: const EdgeInsets.only(top: 50),
         child: Column(
           children: <Widget>[
             Container(
               height: MediaQuery.of(context).size.height * 0.2,
-              child: Image.asset("assets/images/News-me.png"),
+              child: Image.asset("assets/images/NewsMe.png"),
             ),
             Expanded(
               child: ListView.builder(
@@ -65,7 +65,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                             style: Theme.of(context).textTheme.title,
                           ),
                           trailing: Switch(
-                              activeColor: Color(0xff329388),
+                              activeColor: Colors.red,
                               value: darkModeValue,
                               onChanged: (newValue) async {
                                 await Provider.of<ThemeModel>(context,
@@ -84,8 +84,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                   return ListTile(
                     onTap: () {
                       Navigator.pop(context);
-                      Navigator.pushNamed(
-                          context, navMenu[index - 1].destination);
+                      if (index == 0) {
+                        Navigator.pushReplacementNamed(
+                            context, navMenu[index - 1].destination);
+                      } else {
+                        Navigator.pushNamed(
+                            context, navMenu[index - 1].destination);
+                      }
                     },
                     title: Text(
                       navMenu[index - 1].title,

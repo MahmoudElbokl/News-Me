@@ -9,6 +9,7 @@ class NewsArticles with ChangeNotifier {
   bool _isLoad = true;
   MyNewsTopicsDb _db = MyNewsTopicsDb();
   static List myTopics = [];
+  static int tabIndex = 0;
   List<News> _topicsNews = List<News>();
   List<News> _allNews = List<News>();
   static bool dpChanged = false;

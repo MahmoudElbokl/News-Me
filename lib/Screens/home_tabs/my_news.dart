@@ -67,8 +67,15 @@ class _MyNewsState extends State<MyNews> {
                             Navigator.of(context)
                                 .pushNamed(EditMyNews.routeName);
                           },
-                          child: Text("Start choose your favorite Topics"),
-                          color: Color(0xff329388),
+                          child: Text(
+                            "Start choose your favorite Topics",
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .body1
+                                .copyWith(color: Colors.white),
+                          ),
+                          color: Colors.red,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(15),
