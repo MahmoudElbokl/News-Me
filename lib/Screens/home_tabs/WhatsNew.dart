@@ -35,8 +35,8 @@ class WhatsNew extends StatelessWidget {
                   ? Container(
                       color: Provider.of<ThemeModel>(context).currentTheme ==
                               darkTheme
-                          ? Colors.grey
-                          : Color(0xffb2d8d8),
+                          ? Colors.grey[850]
+                          : Colors.grey[830],
                       padding:
                           const EdgeInsets.only(left: 10, top: 7, bottom: 7),
                       width: double.infinity,
@@ -52,13 +52,10 @@ class WhatsNew extends StatelessWidget {
                       ),
                     )
                   : SizedBox.shrink(),
-//              SizedBox(
-//                height: 7,
-//              ),
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.only(right: 3),
-                  itemCount: 15,
+                  itemCount: news.length > 15 ? 15 : news.length,
                   itemBuilder: (context, index) {
                     if (news[index +
                                 (orientation == Orientation.landscape ? 0 : 1)]

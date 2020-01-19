@@ -11,7 +11,11 @@ class GridViewArticles extends StatelessWidget {
         Provider.of<NewsArticles>(context, listen: false).topicsNews;
     return OrientationBuilder(builder: (context, orientation) {
       return GridView.builder(
-        itemCount: orientation == Orientation.landscape ? 9 : 10,
+        itemCount: topicsNews.length > 14
+            ? orientation == Orientation.landscape ? 12 : 10
+            : orientation == Orientation.landscape
+            ? topicsNews.length
+            : topicsNews.length - 4,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: orientation == Orientation.landscape ? 3 : 2,
           childAspectRatio:

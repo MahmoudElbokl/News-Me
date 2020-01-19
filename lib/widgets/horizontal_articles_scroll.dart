@@ -12,7 +12,7 @@ class HorizontalArticlesScroll extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsets.only(top: 10, bottom: 10),
-      height: size.height * 0.30,
+      height: size.height * 0.27,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: 4,
@@ -20,7 +20,7 @@ class HorizontalArticlesScroll extends StatelessWidget {
             return Row(
               children: [
                 SizedBox(
-                  width: size.width * 0.05,
+                  width: size.width * 0.025,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -30,7 +30,7 @@ class HorizontalArticlesScroll extends StatelessWidget {
                   child: Stack(children: <Widget>[
                     Container(
                       padding: const EdgeInsets.only(top: 10),
-                      width: size.width * 0.9,
+                      width: size.width * 0.8,
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -57,20 +57,26 @@ class HorizontalArticlesScroll extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      width: size.width * 0.90,
+                      width: size.width * 0.75,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       alignment: Alignment.bottomCenter,
                       child: Text(
                         topicsNews[index].title,
-                        style: Theme.of(context).textTheme.body2,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .body2
+                            .copyWith(
+                            fontSize: 14, fontWeight: FontWeight.w800),
                         textAlign: TextAlign.center,
+                        maxLines: 2,
                       ),
                     ),
                   ]),
                 ),
                 (index == 3)
                     ? SizedBox(
-                        width: size.width * 0.05,
+                  width: size.width * 0.025,
                       )
                     : SizedBox.shrink(),
               ],

@@ -32,7 +32,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        color: Color(0xffb2d8d8),
+        color: Provider
+            .of<ThemeModel>(context)
+            .currentTheme == lightTheme
+            ? Color(0xffD5EEF5)
+            : Colors.grey[850],
         padding: const EdgeInsets.only(top: 50),
         child: Column(
           children: <Widget>[

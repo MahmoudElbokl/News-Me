@@ -13,8 +13,10 @@ class ArticleDetails extends StatelessWidget {
     News article = ModalRoute.of(context).settings.arguments as News;
     final mediaQuery = MediaQuery.of(context);
     return MainScaffold(
-      title:
-          "${article.title.split(" ")[0]} ${article.title.split(" ")[1]} ${article.title.split(" ")[2]}",
+      title: article.title.length > 20
+          ? "${article.title.split(" ")[0]} ${article.title.split(
+          " ")[1]} ${article.title.split(" ")[2]}"
+          : article.title,
       tabBar: null,
       body: OrientationBuilder(builder: (context, orientation) {
         return Column(
@@ -29,10 +31,10 @@ class ArticleDetails extends StatelessWidget {
                   ? mediaQuery.size.width * 0.40
                   : double.maxFinite,
               child: article.urlToImage == null
-                  ? Image.asset("images/news-placeholder.png")
+                  ? Image.asset("assets/images/news-placeholder.png")
                   : FadeInImage(
                       fit: BoxFit.cover,
-                      placeholder: AssetImage("images/news-placeholder.png"),
+                placeholder: AssetImage("assets/images/news-placeholder.png"),
                       image: NetworkImage(
                         article.urlToImage,
                       ),
@@ -59,11 +61,18 @@ class ArticleDetails extends StatelessWidget {
 
 Widget detailsContent(News article, context, bool space) {
   return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
-      Text(
-        article.title,
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+      Align(
+        alignment: Alignment.center,
+        child: Text(
+          article.title,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+        ),
+      ),
+      SizedBox(
+        height: 15,
       ),
       Text(
         article.content == null ? article.description : article.content,
@@ -79,6 +88,7 @@ Widget detailsContent(News article, context, bool space) {
           Text(
             "To see the full article go to:",
             style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.left,
           ),
           FlatButton(
             padding: const EdgeInsets.all(0),

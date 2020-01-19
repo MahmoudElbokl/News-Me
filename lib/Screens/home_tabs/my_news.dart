@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:news_me/utilites.dart';
 import 'package:provider/provider.dart';
 
-import 'package:news_me/Models/news.dart';
 import 'package:news_me/Models/news_articles_provider.dart';
 import 'package:news_me/Screens/edit_my_news.dart';
 import 'package:news_me/Shared_ui/shimmer_list.dart';
@@ -16,13 +15,6 @@ class MyNews extends StatefulWidget {
 
 class _MyNewsState extends State<MyNews> {
   bool init = true;
-
-//  List<News> articles = [];
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() async {
@@ -63,22 +55,6 @@ class _MyNewsState extends State<MyNews> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-//                        Row(
-//                          mainAxisSize: MainAxisSize.min,
-//                          children: <Widget>[
-//                            CircleAvatar(
-//                              backgroundColor: Color(0xff329388),
-//                              child: Icon(
-//                                Icons.add,
-//                                color: Colors.white,
-//                              ),
-//                            ),
-//                            SizedBox(
-//                              width: 5,
-//                            ),
-//                            Text("Add Topic")
-//                          ],
-//                        ),
                         Text(
                           "All the latest stories from your choosen topics will apear here.",
                           textAlign: TextAlign.center,
