@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_me/Screens/edit_my_news.dart';
 import 'package:provider/provider.dart';
 
 import 'package:news_me/Models/expansion_item.dart';
@@ -65,7 +66,12 @@ class _AllTopicsState extends State<AllTopics> {
                     headerBuilder: (context, isExpanded) {
                       return ListTile(
                         onTap: () {
-//                            item.isExpanded = !item.isExpanded;
+                          if (!EditMyNews.checkSelectionsChanges
+                              .contains(itemValue)) {
+                            EditMyNews.checkSelectionsChanges.add(itemValue);
+                          } else {
+                            EditMyNews.checkSelectionsChanges.remove(itemValue);
+                          }
                           provider.addTopicToActive(itemValue);
                         },
                         contentPadding: const EdgeInsets.all(0),
@@ -80,6 +86,14 @@ class _AllTopicsState extends State<AllTopics> {
                             activeColor: Colors.red,
                             value: provider.topicsActivity[itemValue],
                             onChanged: (newValue) {
+                              if (!EditMyNews.checkSelectionsChanges
+                                  .contains(itemValue)) {
+                                EditMyNews.checkSelectionsChanges.add(
+                                    itemValue);
+                              } else {
+                                EditMyNews.checkSelectionsChanges.remove(
+                                    itemValue);
+                              }
                               provider.addTopicToActive(itemValue);
                             }),
                       );

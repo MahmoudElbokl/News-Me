@@ -16,6 +16,8 @@ class NewsArticles with ChangeNotifier {
   bool _network = true;
 
   bool get isLoading {
+    print("$_isLoad 16");
+    print("16");
     return _isLoad;
   }
 
@@ -76,7 +78,6 @@ class NewsArticles with ChangeNotifier {
     return myTopics;
   }
 
-//  Future<List<News>>
   fetchTopicsNews() async {
     _isLoad = true;
     await fetchTopicFromDb();
@@ -125,6 +126,5 @@ class NewsArticles with ChangeNotifier {
     }
     _isLoad = false;
     notifyListeners();
-//    return _topicsNews;
   }
 }

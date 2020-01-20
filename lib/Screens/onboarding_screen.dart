@@ -9,7 +9,7 @@ class OnBoardingScreen extends StatelessWidget {
   final List<OnBoardingPage> onBoardingPages = [
     OnBoardingPage(
       image: "assets/images/NewsMe.png",
-      title: "News.Me",
+      title: "News Me",
       details: "One place for all your news",
     ),
     OnBoardingPage(

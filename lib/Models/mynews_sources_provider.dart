@@ -115,9 +115,9 @@ class MyNewsSources with ChangeNotifier {
     return active;
   }
 
-  saveOnDataBase() {
+  saveOnDataBase() async {
     NewsArticles.dpChanged = true;
-    _db.deleteTable();
+    await _db.deleteTable();
     int i = -1;
     _topicsActivity.forEach((value) {
       i++;
@@ -125,7 +125,6 @@ class MyNewsSources with ChangeNotifier {
         _db.saveTopic(i);
       }
     });
-    _isLoad = true;
     _topicsActivity = List.generate(topics.length, (index) {
       return false;
     });

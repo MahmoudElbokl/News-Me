@@ -22,6 +22,7 @@ class _MyNewsState extends State<MyNews> {
     if (init) {
       final provider = Provider.of<NewsArticles>(context, listen: false);
       if (provider.topicsNews.length == 0 || NewsArticles.dpChanged) {
+        print("10");
         await provider.fetchTopicsNews().catchError((error) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             showErrorAlertDialog(

@@ -10,6 +10,7 @@ import 'package:news_me/Shared_ui/shimmer_list.dart';
 import 'package:news_me/utilites.dart';
 
 class EditMyNews extends StatefulWidget {
+  static List<int> checkSelectionsChanges = [];
   static String routeName = "edit_my_news";
 
   @override
@@ -43,16 +44,13 @@ class _EditMyNewsState extends State<EditMyNews> {
 
   @override
   Widget build(BuildContext context) {
-    return
-//      DefaultTabController(
-//      length: 2,
-//      child:
-      WillPopScope(
-        onWillPop: () {
+    return WillPopScope(
+      onWillPop: () {
+        if (EditMyNews.checkSelectionsChanges.length != 0) {
           return showDialog(
               context: context,
               child: AlertDialog(
-                title: Text("Your choosen topics will not saved"),
+                title: Text("Are you want to unsave Changes?"),
                 actions: <Widget>[
                   new FlatButton(
                     onPressed: () => Navigator.of(context).pop(false),
@@ -77,16 +75,32 @@ class _EditMyNewsState extends State<EditMyNews> {
                   )
                 ],
               ));
-        },
+        } else {
+          Provider.of<MyNewsSources>(context, listen: false)
+              .returnActiveToFalse();
+          Provider.of<MyNewsSources>(context, listen: false)
+              .returnExpansionToFalse();
+          for (int i = 0; i < NewsArticles.myTopics.length; i++) {
+            Provider.of<MyNewsSources>(context, listen: false).addTopicToActive(
+              topics.indexOf(topics[NewsArticles.myTopics[i]["topicindex"]]),
+            );
+          }
+          return Future.value(true);
+        }
+      },
       child: MainScaffold(
         actions: IconButton(
             icon: Icon(Icons.done),
-            onPressed: () {
-              Provider.of<MyNewsSources>(context, listen: false)
-                  .saveOnDataBase();
-              NewsArticles.tabIndex = 1;
+            onPressed: () async {
+              if (EditMyNews.checkSelectionsChanges.length != 0) {
+                await Provider.of<MyNewsSources>(context, listen: false)
+                    .saveOnDataBase();
+              } else {
+                NewsArticles.dpChanged = false;
+              }
               Provider.of<MyNewsSources>(context, listen: false)
                   .returnExpansionToFalse();
+              NewsArticles.tabIndex = 1;
               Navigator.pushReplacementNamed(context, HomeScreen.routeName);
             }),
 //        tabBar: TabBar(

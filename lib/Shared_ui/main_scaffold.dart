@@ -19,13 +19,17 @@ class MainScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        bottom: tabBar == null ? null : tabBar,
-        title: Text(title),
-        centerTitle: true,
-        actions: <Widget>[
-          actions == null ? SizedBox.shrink() : actions,
-        ],
+      appBar: PreferredSize(
+        preferredSize:
+        tabBar == null ? Size.fromHeight(50) : Size.fromHeight(100),
+        child: AppBar(
+          bottom: tabBar == null ? null : tabBar,
+          title: Text(title),
+          centerTitle: true,
+          actions: <Widget>[
+            actions == null ? SizedBox.shrink() : actions,
+          ],
+        ),
       ),
       drawer: navigationDrawer == true ? NavigationDrawer() : null,
       body: body,

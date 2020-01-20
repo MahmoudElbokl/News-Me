@@ -57,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen>
     if (isInit) {
       final provider = Provider.of<NewsArticles>(context, listen: false);
       if (provider.allNews.length == 0) {
+        print("15");
         topNews = await provider.fetchAllNews().catchError((error) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             showErrorAlertDialog(
