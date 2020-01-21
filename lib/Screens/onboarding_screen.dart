@@ -14,7 +14,7 @@ class OnBoardingScreen extends StatelessWidget {
     ),
     OnBoardingPage(
       image: "assets/images/topicselection.png",
-      title: "My News feature",
+      title: "My News",
       details: "All your interesting news in one screen",
     ),
   ];
@@ -42,12 +42,15 @@ class OnBoardingScreen extends StatelessWidget {
                     child: Image.asset(
                       onBoardingPages[index].image,
                       height: size.height * 0.3,
-                      width: size.width * 0.7,
+                      width: size.width * 0.5,
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 25),
+                      padding: EdgeInsets.only(
+                          top: size.height * 0.025,
+                          bottom: size.height * 0.01,
+                          left: 25,
+                          right: 25),
                       child: Text(
                         onBoardingPages[index].title,
                         style: Theme.of(context).textTheme.body1,
@@ -60,7 +63,8 @@ class OnBoardingScreen extends StatelessWidget {
                       softWrap: true,
                       textAlign: TextAlign.center,
                     ),
-                    width: size.width * 0.75,
+                    width: size.width * 0.55,
+                    padding: EdgeInsets.only(bottom: size.height * 0.1),
                   ),
                 ],
               );
@@ -68,7 +72,7 @@ class OnBoardingScreen extends StatelessWidget {
           ),
           Container(
             alignment: Alignment.center,
-            margin: EdgeInsets.only(top: size.height * 0.5),
+            margin: EdgeInsets.only(top: size.height * 0.6),
             child: SmoothPageIndicator(
               controller: controller,
               count: onBoardingPages.length,

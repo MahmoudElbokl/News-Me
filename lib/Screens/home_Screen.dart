@@ -79,7 +79,10 @@ class _HomeScreenState extends State<HomeScreen>
         .of(context)
         .padding
         .top;
-    final provider = Provider.of<NewsArticles>(context);
+    final height = MediaQuery
+        .of(context)
+        .size
+        .height;
     return WillPopScope(
       onWillPop: () {
         return showDialog(
@@ -119,20 +122,12 @@ class _HomeScreenState extends State<HomeScreen>
             ],
             controller: _tabController,
           ),
-          body: provider.network
-              ? TabBarView(
+          body: TabBarView(
             children: [
               WhatsNew(statusBar),
               MyNews(statusBar),
             ],
             controller: _tabController,
-          )
-              : Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Text(
-                  "You have a network connection error, Please check your connection"),
-            ),
           ),
         ),
       ),

@@ -58,9 +58,25 @@ class MyNewsSources with ChangeNotifier {
     notifyListeners();
   }
 
+  Map<int, List<String>> _eachTopicSources = {};
+
+  Map<int, List<String>> get topicSources {
+    return _eachTopicSources;
+  }
   fetchAllSources() async {
     _isLoad = true;
     if (_newsSources.length > 0) {
+      for (int i = 0; i < topics.length; i++) {
+        List<String> sourcesTopic = [];
+        _newsSources.forEach((source) {
+          if (source.category == topics[i]) {
+            sourcesTopic.add(source.name);
+          }
+        });
+        _eachTopicSources.putIfAbsent(i, () {
+          return sourcesTopic;
+        });
+      }
       _isLoad = false;
       notifyListeners();
     } else {
@@ -82,11 +98,21 @@ class MyNewsSources with ChangeNotifier {
         _isLoad = false;
         throw ("error");
       }
+      for (int i = 0; i < topics.length; i++) {
+        List<String> sourcesTopic = [];
+        _newsSources.forEach((source) {
+          if (source.category == topics[i]) {
+            sourcesTopic.add(source.name);
+          }
+        });
+        _eachTopicSources.putIfAbsent(i, () {
+          return sourcesTopic;
+        });
+      }
       _isLoad = false;
       notifyListeners();
     }
   }
-
 
   int checkCategoriesNumberOfSources(sourceIndex, category) {
     return Collection(_newsSources).count((item) {

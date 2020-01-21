@@ -31,8 +31,8 @@ class _WhatsNewState extends State<WhatsNew> {
       if (provider.allNews.length == 0) {
         news = await provider.fetchAllNews().catchError((error) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            showErrorAlertDialog(
-                "Please check your internet connection", context);
+            provider.setNetwork(false);
+            provider.setLoad(false);
           });
         });
       } else {
@@ -48,304 +48,326 @@ class _WhatsNewState extends State<WhatsNew> {
     final orientation = MediaQuery
         .of(context)
         .orientation;
-    final double height = size.height - (widget.statusBarSize + 100);
+    final double height = size.height;
 
     return Provider
         .of<NewsArticles>(context)
         .isLoading
         ? ShimmerList()
-        : LiquidPullToRefresh(
-      color: Provider
-          .of<ThemeModel>(context)
-          .currentTheme == lightTheme
-          ? Colors.red[100]
-          : Colors.blueGrey,
-//      showChildOpacityTransition: false,
-      onRefresh: () async {
-        news = await Provider.of<NewsArticles>(context, listen: false)
-            .fetchAllNews()
-            .whenComplete(() {
-          return Future.value();
-        }).catchError((error) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Future.value();
-            showErrorAlertDialog(
-                "Please check your internet connection", context);
+        : Provider
+        .of<NewsArticles>(context)
+        .network
+        ? LiquidPullToRefresh(
+        color:
+        Provider
+            .of<ThemeModel>(context)
+            .currentTheme == lightTheme
+            ? Colors.red[100]
+            : Colors.blueGrey,
+        onRefresh: () async {
+          news = await Provider.of<NewsArticles>(context, listen: false)
+              .fetchAllNews()
+              .whenComplete(() {
+            return Future.value();
+          }).catchError((error) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Future.value();
+              showErrorAlertDialog(
+                  "Please check your internet connection", context);
+            });
           });
-        });
-      },
-      springAnimationDurationInMilliseconds: 300,
-      child: ListView.builder(
-        itemCount: news.length > 16 ? 17 : news.length,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return orientation != Orientation.landscape
-                      ? GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(
-                    context, ArticleDetails.routeName,
-                    arguments: news[index]);
-              },
-              child: Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.3,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: news[0].urlToImage == null
-                          ? AssetImage(
-                          "assets/images/news-placeholder.png")
-                          : NetworkImage(news[0].urlToImage),
-                      fit: BoxFit.cover),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 25,
-                        ),
-                        child: Text(
-                          "${news[0].title}",
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .body2
-                              .copyWith(
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment:
-                          CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              news[0].source.name,
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .body2
-                                  .copyWith(fontSize: 14),
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.access_time,
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Text(
-                                  formatTime(DateTime
-                                      .parse(
-                                      news[0].publishedAt)
-                                      .millisecondsSinceEpoch),
-                                  style: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .body2
-                                      .copyWith(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+        },
+        springAnimationDurationInMilliseconds: 300,
+        child: ListView.builder(
+          itemCount: news.length > 16 ? 17 : news.length,
+          itemBuilder: (context, index) {
+            if (news[index].title == news[index + 1].title) {
+              return SizedBox.shrink();
+            }
+            if (index == 0) {
+              return orientation != Orientation.landscape
+                  ? GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(
+                      context, ArticleDetails.routeName,
+                      arguments: news[index]);
+                },
+                child: Container(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height:
+                  MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.3,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: news[0].urlToImage == null
+                            ? AssetImage(
+                            "assets/images/news-placeholder.png")
+                            : NetworkImage(news[0].urlToImage),
+                        fit: BoxFit.cover),
                   ),
-                ),
-              ),
-            )
-                : SizedBox.shrink();
-          }
-          if (index == 1) {
-            return orientation != Orientation.landscape
-                      ? Container(
-              color:
-              Provider
-                  .of<ThemeModel>(context)
-                  .currentTheme ==
-                  darkTheme
-                  ? Colors.grey[850]
-                  : Colors.grey[830],
-              padding: const EdgeInsets.only(left: 10, top: 5),
-              width: double.infinity,
-              child: Text("Top Stories",
-                  style: TextStyle(
-                    fontSize: 18,
-                  )),
-            )
-                : SizedBox.shrink();
-          } else {
-            return GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, ArticleDetails.routeName,
-                    arguments: news[index +
-                        (orientation == Orientation.landscape ? 0 : 1)]);
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 7),
-                child: Card(
-                  child: Container(
-//                                  padding: const EdgeInsets.only(
-//                                      right: 15, left: 10, bottom: 5),
-                    child: Row(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: SizedBox(
-                            height: size.height *
-                                ((orientation == Orientation.landscape
-                                    ? 0.25
-                                    : 0.15)),
-                            width: size.width * 0.3,
-                            child: news[index +
-                                (orientation ==
-                                    Orientation.landscape
-                                    ? 0
-                                    : 1)]
-                                              .urlToImage ==
-                                null
-                                ? ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4),
-                                  bottomLeft: Radius.circular(4)),
-                              child: Image.asset(
-                                  "assets/images/news-placeholder.png"),
-                            )
-                                : ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4),
-                                  bottomLeft: Radius.circular(4)),
-                              child: FadeInImage(
-                                            fit: BoxFit.cover,
-                                            placeholder: AssetImage(
-                                                "assets/images/news-placeholder.png"),
-                                            image: NetworkImage(
-                                              news[index +
-                                                  (orientation ==
-                                                      Orientation
-                                                          .landscape
-                                                      ? 0
-                                                      : 1)]
-                                                  .urlToImage,
-                                            ),
-                                          ),
-                                        ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 25,
+                          ),
+                          child: Text(
+                            "${news[0].title}",
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .body2
+                                .copyWith(
+                                fontWeight: FontWeight.w700,
+                                fontSize: height > 700 ? 18 : 16),
                           ),
                         ),
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.only(right: 7),
-                            height: size.height *
-                                ((orientation == Orientation.landscape
-                                    ? 0.24
-                                    : 0.14)),
-                            child: Column(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  news[index +
-                                      (orientation ==
-                                          Orientation.landscape
-                                          ? 0
-                                          : 1)]
-                                      .title,
-                                  style: TextStyle(
-                                    fontSize: 15,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment:
+                            CrossAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                news[0].source.name,
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .body2
+                                    .copyWith(fontSize: height > 700 ? 14 : 10),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.access_time,
+                                    color: Colors.white,
+                                    size: 16,
                                   ),
-                                  maxLines: 2,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      news[index +
-                                          (orientation ==
-                                              Orientation
-                                                  .landscape
-                                              ? 0
-                                              : 1)]
-                                                        .source
-                                                        .name
-                                                        .length >
-                                          20
-                                          ? news[index +
-                                                        (orientation ==
-                                                            Orientation
-                                                                .landscape
-                                                            ? 0
-                                                            : 1)]
-                                          .source
-                                          .name
-                                          .substring(0, 20)
-                                          : news[index +
-                                                        (orientation ==
-                                                            Orientation
-                                                                .landscape
-                                                            ? 0
-                                                            : 1)]
-                                          .source
-                                          .name,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    Icon(
-                                      Icons.access_time,
-                                      size: 16,
-                                    ),
-                                    SizedBox(
-                                      width: 3,
-                                    ),
-                                    Text(
-                                      formatTime(DateTime
-                                          .parse(news[index +
-                                                        (orientation ==
-                                                            Orientation
-                                                                .landscape
-                                                            ? 0
-                                                            : 1)]
-                                          .publishedAt)
-                                          .millisecondsSinceEpoch),
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  SizedBox(
+                                    width: 2,
+                                  ),
+                                  Text(
+                                    formatTime(DateTime
+                                        .parse(
+                                        news[0].publishedAt)
+                                        .millisecondsSinceEpoch),
+                                    style: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .body2
+                                        .copyWith(
+                                        fontSize: height > 700 ? 14 : 10),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
                 ),
-              ),
-            );
-          }
-        },
+              )
+                  : SizedBox.shrink();
+            }
+            if (index == 1) {
+              return orientation != Orientation.landscape
+                  ? Container(
+                color: Provider
+                    .of<ThemeModel>(context)
+                    .currentTheme ==
+                    darkTheme
+                    ? Colors.grey[850]
+                    : Colors.grey[830],
+                padding: const EdgeInsets.only(left: 10, top: 5),
+                width: double.infinity,
+                child: Text("Top Stories",
+                    style: TextStyle(
+                      fontSize: height > 700 ? 18 : 16,
+                    )),
+              )
+                  : SizedBox.shrink();
+            } else {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, ArticleDetails.routeName,
+                      arguments: news[index +
+                          (orientation == Orientation.landscape
+                              ? 0
+                              : 1)]);
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 7),
+                  child: Card(
+                    child: Container(
+//                                  padding: const EdgeInsets.only(
+//                                      right: 15, left: 10, bottom: 5),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: SizedBox(
+                              height: size.height *
+                                  ((orientation == Orientation.landscape
+                                      ? 0.25
+                                      : 0.15)),
+                              width: size.width * 0.3,
+                              child: news[index +
+                                  (orientation ==
+                                      Orientation
+                                          .landscape
+                                      ? 0
+                                      : 1)]
+                                  .urlToImage ==
+                                  null
+                                  ? ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(4),
+                                    bottomLeft:
+                                    Radius.circular(4)),
+                                child: Image.asset(
+                                    "assets/images/news-placeholder.png"),
+                              )
+                                  : ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(4),
+                                    bottomLeft:
+                                    Radius.circular(4)),
+                                child: FadeInImage(
+                                  fit: BoxFit.cover,
+                                  placeholder: AssetImage(
+                                      "assets/images/news-placeholder.png"),
+                                  image: NetworkImage(
+                                    news[index +
+                                        (orientation ==
+                                            Orientation
+                                                .landscape
+                                            ? 0
+                                            : 1)]
+                                        .urlToImage,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.only(right: 7),
+                              height: size.height *
+                                  ((orientation == Orientation.landscape
+                                      ? 0.24
+                                      : 0.14)),
+                              child: Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    news[index +
+                                        (orientation ==
+                                            Orientation
+                                                .landscape
+                                            ? 0
+                                            : 1)]
+                                        .title,
+                                    style: TextStyle(
+                                      fontSize: height > 700 ? 15 : 13,
+                                    ),
+                                    maxLines: 2,
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Text(
+                                        news[index +
+                                            (orientation ==
+                                                Orientation
+                                                    .landscape
+                                                ? 0
+                                                : 1)]
+                                            .source
+                                            .name
+                                            .length >
+                                            20
+                                            ? news[index +
+                                            (orientation ==
+                                                Orientation
+                                                    .landscape
+                                                ? 0
+                                                : 1)]
+                                            .source
+                                            .name
+                                            .substring(0, 20)
+                                            : news[index +
+                                            (orientation ==
+                                                Orientation
+                                                    .landscape
+                                                ? 0
+                                                : 1)]
+                                            .source
+                                            .name,
+                                        style: TextStyle(
+                                          fontSize: height > 700 ? 12 : 10,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Icon(
+                                        Icons.access_time,
+                                        size: 16,
+                                      ),
+                                      SizedBox(
+                                        width: 3,
+                                      ),
+                                      Text(
+                                        formatTime(DateTime
+                                            .parse(news[index +
+                                            (orientation ==
+                                                Orientation
+                                                    .landscape
+                                                ? 0
+                                                : 1)]
+                                            .publishedAt)
+                                            .millisecondsSinceEpoch),
+                                        style: TextStyle(
+                                          fontSize: height > 700 ? 10 : 8,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+          },
+        ))
+        : Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Text(
+          "You have a network connection error, Please check your connection",
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

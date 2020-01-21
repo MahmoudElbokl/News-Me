@@ -23,6 +23,16 @@ class NewsArticles with ChangeNotifier {
     return _network;
   }
 
+  setNetwork(bool network) {
+    _network = network;
+    notifyListeners();
+  }
+
+  setLoad(bool loading) {
+    _isLoad = loading;
+    notifyListeners();
+  }
+
   List<News> get allNews {
     return [..._allNews];
   }
@@ -36,8 +46,9 @@ class NewsArticles with ChangeNotifier {
     String newsApiUrl = baseApi + apiKey;
     var response = await http.get(newsApiUrl);
     if (response.statusCode == 200) {
-      Map<String, dynamic> jsonData = jsonDecode(response.body);
-      var articles = jsonData["articles"];
+      _network = true;
+      Map<String, dynamic> jsonData = await jsonDecode(response.body);
+      var articles = await jsonData["articles"];
       for (var item in articles) {
         final source = item["source"];
         final String title = item["title"];
@@ -120,6 +131,7 @@ class NewsArticles with ChangeNotifier {
           throw ("error");
         }
       }
+      _network = true;
     } else {
       _topicsNews = [];
     }

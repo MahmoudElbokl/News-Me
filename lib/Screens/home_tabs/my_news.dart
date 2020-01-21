@@ -74,7 +74,7 @@ class _MyNewsState extends State<MyNews> {
                                 .pushNamed(EditMyNews.routeName);
                           },
                           child: Text(
-                            "Start choose your favorite Topics",
+                            "Start choose your Topics",
                             style: Theme
                                 .of(context)
                                 .textTheme

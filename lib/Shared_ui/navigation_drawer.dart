@@ -84,7 +84,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                           },
                           title: Text(
                             "Dark Theme",
-                            style: Theme.of(context).textTheme.title,
                           ),
                           trailing: Switch(
                               activeColor: Colors.red[400],
@@ -118,7 +117,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     },
                     title: Text(
                       navMenu[index - 1].title,
-                      style: Theme.of(context).textTheme.title,
                     ),
                     trailing: Icon(Icons.chevron_right),
                   );
