@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:news_me/Models/news.dart';
 import 'package:news_me/Shared_ui/main_scaffold.dart';
 import 'package:news_me/utilites.dart';
@@ -58,6 +58,10 @@ class ArticleDetails extends StatelessWidget {
 }
 
 Widget detailsContent(News article, context, bool space) {
+  final height = MediaQuery
+      .of(context)
+      .size
+      .height;
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
@@ -66,17 +70,25 @@ Widget detailsContent(News article, context, bool space) {
         child: Text(
           article.title,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: height > 700 ? 17 : 15, fontWeight: FontWeight.bold),
         ),
       ),
       SizedBox(
         height: 8,
       ),
-      Text(
+      AutoSizeText(
         article.content == null ? article.description : article.content,
-        style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
+        style: Theme
+            .of(context)
+            .textTheme
+            .body1
+            .copyWith(fontSize: height > 700 ? 16 : 13),
+        maxLines: 7,
       ),
-      space ? Spacer() : SizedBox(
+      space
+          ? Spacer()
+          : SizedBox(
         height: 15,
       ),
       Column(
@@ -85,7 +97,7 @@ Widget detailsContent(News article, context, bool space) {
         children: <Widget>[
           Text(
             "To see the full article go to:",
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: height > 700 ? 14 : 11),
             textAlign: TextAlign.left,
           ),
           FlatButton(
@@ -98,9 +110,10 @@ Widget detailsContent(News article, context, bool space) {
                 showErrorAlertDialog(context, "there are a connection error");
               }
             },
-            child: Text(
+            child: AutoSizeText(
               "${article.url}",
               style: TextStyle(fontSize: 14, color: Colors.blueAccent),
+              maxLines: 2,
             ),
           ),
         ],

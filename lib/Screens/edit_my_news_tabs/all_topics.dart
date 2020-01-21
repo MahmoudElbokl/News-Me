@@ -133,7 +133,7 @@ class _AllTopicsState extends State<AllTopics> {
                               color: Colors.red[400])
                               : SizedBox.shrink(),
                           title: Text(
-                            "- ${mds[itemValue][index]}",
+                            "- ${provider.topicSources[itemValue][index]}",
                             style: Theme
                                 .of(context)
                                 .textTheme
@@ -144,7 +144,7 @@ class _AllTopicsState extends State<AllTopics> {
                         );
                       },
                       separatorBuilder: (context, index) => Divider(),
-                      itemCount: mds[itemValue].length,
+                      itemCount: provider.topicSources[itemValue].length,
                     ),
                   ),
                 ),

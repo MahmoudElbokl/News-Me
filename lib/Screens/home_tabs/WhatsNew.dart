@@ -21,7 +21,8 @@ class WhatsNew extends StatefulWidget {
 
 class _WhatsNewState extends State<WhatsNew> {
   bool isInit = true;
-  List<News> news = [];
+
+//  List<News> news = [];
 
   @override
   void didChangeDependencies() async {
@@ -29,21 +30,23 @@ class _WhatsNewState extends State<WhatsNew> {
     if (isInit) {
       final provider = Provider.of<NewsArticles>(context, listen: false);
       if (provider.allNews.length == 0) {
-        news = await provider.fetchAllNews().catchError((error) {
+        await provider.fetchAllNews().catchError((error) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             provider.setNetwork(false);
             provider.setLoad(false);
           });
         });
-      } else {
-        news = provider.allNews;
       }
+//      else {
+//        news = provider.allNews;
+//      }
     }
     isInit = false;
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<NewsArticles>(context, listen: false);
     final size = MediaQuery.of(context).size;
     final orientation = MediaQuery
         .of(context)
@@ -65,7 +68,7 @@ class _WhatsNewState extends State<WhatsNew> {
             ? Colors.red[100]
             : Colors.blueGrey,
         onRefresh: () async {
-          news = await Provider.of<NewsArticles>(context, listen: false)
+          await Provider.of<NewsArticles>(context, listen: false)
               .fetchAllNews()
               .whenComplete(() {
             return Future.value();
@@ -79,9 +82,11 @@ class _WhatsNewState extends State<WhatsNew> {
         },
         springAnimationDurationInMilliseconds: 300,
         child: ListView.builder(
-          itemCount: news.length > 16 ? 17 : news.length,
+          itemCount: provider.allNews.length > 16 ? 17 : provider.allNews
+              .length,
           itemBuilder: (context, index) {
-            if (news[index].title == news[index + 1].title) {
+            if (provider.allNews[index].title ==
+                provider.allNews[index + 1].title) {
               return SizedBox.shrink();
             }
             if (index == 0) {
@@ -90,7 +95,7 @@ class _WhatsNewState extends State<WhatsNew> {
                 onTap: () {
                   Navigator.pushNamed(
                       context, ArticleDetails.routeName,
-                      arguments: news[index]);
+                      arguments: provider.allNews[index]);
                 },
                 child: Container(
                   width: MediaQuery
@@ -104,10 +109,10 @@ class _WhatsNewState extends State<WhatsNew> {
                       .height * 0.3,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: news[0].urlToImage == null
+                        image: provider.allNews[0].urlToImage == null
                             ? AssetImage(
                             "assets/images/news-placeholder.png")
-                            : NetworkImage(news[0].urlToImage),
+                            : NetworkImage(provider.allNews[0].urlToImage),
                         fit: BoxFit.cover),
                   ),
                   child: Center(
@@ -119,7 +124,7 @@ class _WhatsNewState extends State<WhatsNew> {
                             horizontal: 25,
                           ),
                           child: Text(
-                            "${news[0].title}",
+                            "${provider.allNews[0].title}",
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             style: Theme
@@ -141,7 +146,7 @@ class _WhatsNewState extends State<WhatsNew> {
                             CrossAxisAlignment.end,
                             children: <Widget>[
                               Text(
-                                news[0].source.name,
+                                provider.allNews[0].source.name,
                                 style: Theme
                                     .of(context)
                                     .textTheme
@@ -161,7 +166,7 @@ class _WhatsNewState extends State<WhatsNew> {
                                   Text(
                                     formatTime(DateTime
                                         .parse(
-                                        news[0].publishedAt)
+                                        provider.allNews[0].publishedAt)
                                         .millisecondsSinceEpoch),
                                     style: Theme
                                         .of(context)
@@ -203,7 +208,7 @@ class _WhatsNewState extends State<WhatsNew> {
               return GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, ArticleDetails.routeName,
-                      arguments: news[index +
+                      arguments: provider.allNews[index +
                           (orientation == Orientation.landscape
                               ? 0
                               : 1)]);
@@ -224,7 +229,7 @@ class _WhatsNewState extends State<WhatsNew> {
                                       ? 0.25
                                       : 0.15)),
                               width: size.width * 0.3,
-                              child: news[index +
+                              child: provider.allNews[index +
                                   (orientation ==
                                       Orientation
                                           .landscape
@@ -250,7 +255,7 @@ class _WhatsNewState extends State<WhatsNew> {
                                   placeholder: AssetImage(
                                       "assets/images/news-placeholder.png"),
                                   image: NetworkImage(
-                                    news[index +
+                                    provider.allNews[index +
                                         (orientation ==
                                             Orientation
                                                 .landscape
@@ -276,7 +281,7 @@ class _WhatsNewState extends State<WhatsNew> {
                                 CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    news[index +
+                                    provider.allNews[index +
                                         (orientation ==
                                             Orientation
                                                 .landscape
@@ -291,7 +296,7 @@ class _WhatsNewState extends State<WhatsNew> {
                                   Row(
                                     children: <Widget>[
                                       Text(
-                                        news[index +
+                                        provider.allNews[index +
                                             (orientation ==
                                                 Orientation
                                                     .landscape
@@ -301,7 +306,7 @@ class _WhatsNewState extends State<WhatsNew> {
                                             .name
                                             .length >
                                             20
-                                            ? news[index +
+                                            ? provider.allNews[index +
                                             (orientation ==
                                                 Orientation
                                                     .landscape
@@ -310,7 +315,7 @@ class _WhatsNewState extends State<WhatsNew> {
                                             .source
                                             .name
                                             .substring(0, 20)
-                                            : news[index +
+                                            : provider.allNews[index +
                                             (orientation ==
                                                 Orientation
                                                     .landscape
@@ -333,7 +338,7 @@ class _WhatsNewState extends State<WhatsNew> {
                                       ),
                                       Text(
                                         formatTime(DateTime
-                                            .parse(news[index +
+                                            .parse(provider.allNews[index +
                                             (orientation ==
                                                 Orientation
                                                     .landscape
