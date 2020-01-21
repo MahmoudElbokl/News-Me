@@ -12,7 +12,10 @@ class DrawHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.25,
+      height: MediaQuery
+          .of(context)
+          .size
+          .height * 0.3,
       decoration: BoxDecoration(
         image: DecorationImage(
             image: news.urlToImage == null

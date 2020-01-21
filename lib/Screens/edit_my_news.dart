@@ -46,7 +46,8 @@ class _EditMyNewsState extends State<EditMyNews> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (EditMyNews.checkSelectionsChanges.length != 0) {
+        if (EditMyNews.checkSelectionsChanges.length > 0) {
+          EditMyNews.checkSelectionsChanges = [];
           return showDialog(
               context: context,
               child: AlertDialog(
@@ -92,7 +93,8 @@ class _EditMyNewsState extends State<EditMyNews> {
         actions: IconButton(
             icon: Icon(Icons.done),
             onPressed: () async {
-              if (EditMyNews.checkSelectionsChanges.length != 0) {
+              if (EditMyNews.checkSelectionsChanges.length > 0) {
+                EditMyNews.checkSelectionsChanges = [];
                 await Provider.of<MyNewsSources>(context, listen: false)
                     .saveOnDataBase();
               } else {

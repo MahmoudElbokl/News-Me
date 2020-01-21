@@ -87,6 +87,7 @@ class MyNewsSources with ChangeNotifier {
     }
   }
 
+
   int checkCategoriesNumberOfSources(sourceIndex, category) {
     return Collection(_newsSources).count((item) {
       return item.category == category;

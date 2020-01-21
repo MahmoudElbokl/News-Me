@@ -22,6 +22,7 @@ class GridViewArticles extends StatelessWidget {
           childAspectRatio:
               orientation == Orientation.landscape ? 2.40 / 1.25 : 2 / 2.60,
           crossAxisSpacing: orientation == Orientation.landscape ? 10 : 0,
+          mainAxisSpacing: 5,
         ),
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
@@ -32,13 +33,9 @@ class GridViewArticles extends StatelessWidget {
                       : index + 4]);
             },
             child: Container(
-              height: size.height * 0.2,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
               child: Column(
                 children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
                   Container(
                     width: size.width * 0.45,
                     height: size.height * 0.30,
@@ -101,6 +98,7 @@ class GridViewArticles extends StatelessWidget {
                                   .body2
                                   .copyWith(
                                   fontSize: 14, fontWeight: FontWeight.w800),
+                              maxLines: 2,
                               textAlign: TextAlign.center,
                             ),
                           ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:news_me/Models/theme_changer_provider.dart';
 import 'package:news_me/utilites.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +11,10 @@ import 'package:news_me/widgets/grid_view_articles.dart';
 import 'package:news_me/widgets/horizontal_articles_scroll.dart';
 
 class MyNews extends StatefulWidget {
+  final statusBarSize;
+
+  MyNews(this.statusBarSize);
+
   @override
   _MyNewsState createState() => _MyNewsState();
 }
@@ -22,7 +28,6 @@ class _MyNewsState extends State<MyNews> {
     if (init) {
       final provider = Provider.of<NewsArticles>(context, listen: false);
       if (provider.topicsNews.length == 0 || NewsArticles.dpChanged) {
-        print("10");
         await provider.fetchTopicsNews().catchError((error) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             showErrorAlertDialog(
@@ -86,16 +91,53 @@ class _MyNewsState extends State<MyNews> {
                       ],
                     ),
                   )
-                : Column(
-                    children: <Widget>[
-                      MediaQuery.of(context).orientation ==
-                              Orientation.landscape
-                          ? SizedBox.shrink()
-                          : HorizontalArticlesScroll(),
-                      Expanded(
-                        child: GridViewArticles(),
-                      ),
-                    ],
+        : LiquidPullToRefresh(
+      showChildOpacityTransition: true,
+      color: Provider
+          .of<ThemeModel>(context)
+          .currentTheme ==
+          lightTheme
+          ? Colors.red[100]
+          : Colors.blueGrey,
+      springAnimationDurationInMilliseconds: 300,
+      onRefresh: () async {
+        await Provider.of<NewsArticles>(context, listen: false)
+            .fetchTopicsNews()
+            .whenComplete(() {
+          Future.value();
+        }).catchError((error) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Future.value();
+            showErrorAlertDialog(
+                "There are a connection error, Please check your internet Connection.",
+                context);
+          });
+        });
+      },
+      child: ListView(
+        children: <Widget>[
+          Container(
+            height: MediaQuery
+                .of(context)
+                .size
+                .height -
+                (widget.statusBarSize + 100),
+            child: Column(
+              children: <Widget>[
+                MediaQuery
+                    .of(context)
+                    .orientation ==
+                    Orientation.landscape
+                    ? SizedBox.shrink()
+                    : HorizontalArticlesScroll(),
+                Expanded(
+                  child: GridViewArticles(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
                   );
   }
 }

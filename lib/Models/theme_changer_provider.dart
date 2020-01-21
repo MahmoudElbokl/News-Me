@@ -3,8 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 enum ThemeType { Light, Dark }
 
+bool darkThemeChoose = false;
+
 class ThemeModel extends ChangeNotifier {
-  ThemeData currentTheme = lightTheme;
+  ThemeData currentTheme = darkThemeChoose ? darkTheme : lightTheme;
   ThemeType _themeType = ThemeType.Light;
 
   toggleTheme() {
@@ -23,6 +25,7 @@ class ThemeModel extends ChangeNotifier {
 }
 
 ThemeData darkTheme = ThemeData.dark().copyWith(
+  accentColor: Colors.blueGrey,
   textTheme: TextTheme(
     body1: GoogleFonts.mukta(
         color: Colors.white, fontSize: 17, fontWeight: FontWeight.w400),
@@ -34,7 +37,7 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
   appBarTheme: AppBarTheme(
     textTheme: TextTheme(
       title:
-          GoogleFonts.ibarraRealNova(fontSize: 20, fontWeight: FontWeight.w700),
+      GoogleFonts.ibarraRealNova(fontSize: 20, fontWeight: FontWeight.w700),
     ),
   ),
 );

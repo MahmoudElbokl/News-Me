@@ -16,8 +16,6 @@ class NewsArticles with ChangeNotifier {
   bool _network = true;
 
   bool get isLoading {
-    print("$_isLoad 16");
-    print("16");
     return _isLoad;
   }
 
@@ -42,15 +40,16 @@ class NewsArticles with ChangeNotifier {
       var articles = jsonData["articles"];
       for (var item in articles) {
         final source = item["source"];
-        if (item["title"] != null ||
-            item["description"] != null ||
-            item["content"] != null ||
-            item["urlToImage"] != null ||
+        final String title = item["title"];
+        if (title != null &&
+            title.length > 5 &&
+            (item["description"] != null ||
+                item["content"] != null) &&
             item["publishedAt"] != null) {
           News article = News(
             source: Source(source["id"], source["name"]),
             author: item["author"],
-            title: item["title"],
+            title: title,
             description: item["description"],
             content: item["content"],
             publishedAt: item["publishedAt"],
@@ -78,7 +77,7 @@ class NewsArticles with ChangeNotifier {
     return myTopics;
   }
 
-  fetchTopicsNews() async {
+  Future<void> fetchTopicsNews() async {
     _isLoad = true;
     await fetchTopicFromDb();
     if (myTopics.length != 0) {

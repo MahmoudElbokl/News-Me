@@ -5,6 +5,7 @@ import 'package:news_me/Models/NavMenuItem.dart';
 import 'package:news_me/Models/theme_changer_provider.dart';
 import 'package:news_me/Screens/home_Screen.dart';
 import 'package:news_me/Screens/edit_my_news.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NavigationDrawer extends StatefulWidget {
   @override
@@ -37,15 +38,32 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             .currentTheme == lightTheme
             ? Colors.red[100]
             : Colors.grey[850],
-        padding: const EdgeInsets.only(top: 50),
+        padding: EdgeInsets.only(
+            top: (MediaQuery
+                .of(context)
+                .orientation == Orientation.landscape
+                ? 10
+                : 50)),
         child: Column(
           children: <Widget>[
             Container(
-              height: MediaQuery.of(context).size.height * 0.2,
+              height:
+              MediaQuery
+                  .of(context)
+                  .orientation == Orientation.landscape
+                  ? MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.3
+                  : MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.2,
               child: Image.asset("assets/images/NewsMe.png"),
             ),
             Expanded(
               child: ListView.builder(
+                padding: EdgeInsets.only(top: 10),
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return Column(
@@ -54,10 +72,14 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                           thickness: 3,
                         ),
                         ListTile(
-                          onTap: () {
-                            Provider.of<ThemeModel>(context, listen: false)
+                          onTap: () async {
+                            await Provider.of<ThemeModel>(context,
+                                listen: false)
                                 .toggleTheme();
-                            darkModeValue = true;
+                            SharedPreferences _pre =
+                            await SharedPreferences.getInstance();
+                            _pre.setBool("darktheme", !darkModeValue);
+                            darkModeValue = !darkModeValue;
                             Navigator.pop(context);
                           },
                           title: Text(
@@ -65,13 +87,15 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                             style: Theme.of(context).textTheme.title,
                           ),
                           trailing: Switch(
-                              activeColor: Colors.red,
+                              activeColor: Colors.red[400],
                               value: darkModeValue,
                               onChanged: (newValue) async {
-                                await Provider.of<ThemeModel>(context,
-                                        listen: false)
+                                Provider.of<ThemeModel>(context, listen: false)
                                     .toggleTheme();
-                                darkModeValue = true;
+                                darkModeValue = newValue;
+                                SharedPreferences _pre =
+                                await SharedPreferences.getInstance();
+                                _pre.setBool("darktheme", newValue);
                                 Navigator.pop(context);
                               }),
                         ),

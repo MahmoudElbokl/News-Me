@@ -23,10 +23,8 @@ class ArticleDetails extends StatelessWidget {
           children: <Widget>[
             Container(
               height: orientation == Orientation.landscape
-                  ? mediaQuery.size.height * 0.50 -
-                      (AppBar().preferredSize.height + mediaQuery.padding.top)
-                  : mediaQuery.size.height * 0.42 -
-                      (AppBar().preferredSize.height + mediaQuery.padding.top),
+                  ? mediaQuery.size.height * 0.37
+                  : mediaQuery.size.height * 0.30,
               width: orientation == Orientation.landscape
                   ? mediaQuery.size.width * 0.40
                   : double.maxFinite,
@@ -34,7 +32,8 @@ class ArticleDetails extends StatelessWidget {
                   ? Image.asset("assets/images/news-placeholder.png")
                   : FadeInImage(
                       fit: BoxFit.cover,
-                placeholder: AssetImage("assets/images/news-placeholder.png"),
+                placeholder:
+                AssetImage("assets/images/news-placeholder.png"),
                       image: NetworkImage(
                         article.urlToImage,
                       ),
@@ -43,9 +42,8 @@ class ArticleDetails extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                child: (article.content != null ||
-                        orientation == Orientation.landscape)
+                const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                child: (orientation == Orientation.landscape)
                     ? SingleChildScrollView(
                         child: detailsContent(article, context, false),
                       )
@@ -72,18 +70,18 @@ Widget detailsContent(News article, context, bool space) {
         ),
       ),
       SizedBox(
-        height: 15,
+        height: 8,
       ),
       Text(
         article.content == null ? article.description : article.content,
         style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
       ),
-      SizedBox(
-        height: MediaQuery.of(context).size.height * 0.1,
+      space ? Spacer() : SizedBox(
+        height: 15,
       ),
-      space ? Spacer() : SizedBox.shrink(),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(
             "To see the full article go to:",

@@ -11,8 +11,8 @@ class HorizontalArticlesScroll extends StatelessWidget {
         Provider.of<NewsArticles>(context, listen: false).topicsNews;
     final size = MediaQuery.of(context).size;
     return Container(
-      padding: const EdgeInsets.only(top: 10, bottom: 10),
-      height: size.height * 0.27,
+      padding: const EdgeInsets.only(top: 10),
+      height: size.height * 0.3,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: 4,

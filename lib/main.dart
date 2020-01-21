@@ -15,6 +15,12 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool seen = prefs.getBool('seen');
+  SharedPreferences _pref = await SharedPreferences.getInstance();
+  darkThemeChoose = _pref.getBool("darktheme");
+  if (darkThemeChoose == null) {
+    darkThemeChoose = false;
+  }
+
   if (seen == null || seen == false) {
     _screen = OnBoardingScreen();
   } else {
