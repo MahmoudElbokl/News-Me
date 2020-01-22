@@ -23,9 +23,6 @@ class MainScaffold extends StatelessWidget {
         .of(context)
         .size
         .height;
-    print("${MediaQuery
-        .of(context)
-        .size} 11");
     return Scaffold(
       appBar: PreferredSize(
         preferredSize:

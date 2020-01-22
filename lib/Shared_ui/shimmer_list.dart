@@ -6,6 +6,9 @@ import 'package:news_me/Shared_ui/shimmer_layout.dart';
 class ShimmerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery
+        .of(context)
+        .size;
     int time = 400;
     return SafeArea(
       child: ListView.builder(
@@ -18,15 +21,15 @@ class ShimmerList extends StatelessWidget {
                 baseColor: Colors.grey[300],
                 child: (index == 0)
                     ? Container(
-                        height: MediaQuery.of(context).size.height * 0.25,
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                        ),
-                      )
+                  height: size.height * 0.25,
+                  width: size.width * 0.8,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(15),
+                    ),
+                  ),
+                )
                     : ShimmerLayout(),
                 period: Duration(milliseconds: time),
               ));

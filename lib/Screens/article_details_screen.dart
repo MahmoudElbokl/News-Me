@@ -11,7 +11,9 @@ class ArticleDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     News article = ModalRoute.of(context).settings.arguments as News;
-    final mediaQuery = MediaQuery.of(context);
+    final size = MediaQuery
+        .of(context)
+        .size;
     return MainScaffold(
       title: article.title.length > 20
           ? "${article.title.split(" ")[0]} ${article.title.split(
@@ -23,10 +25,10 @@ class ArticleDetails extends StatelessWidget {
           children: <Widget>[
             Container(
               height: orientation == Orientation.landscape
-                  ? mediaQuery.size.height * 0.37
-                  : mediaQuery.size.height * 0.30,
+                  ? size.height * 0.37
+                  : size.height * 0.30,
               width: orientation == Orientation.landscape
-                  ? mediaQuery.size.width * 0.40
+                  ? size.width * 0.40
                   : double.maxFinite,
               child: article.urlToImage == null
                   ? Image.asset("assets/images/news-placeholder.png")
@@ -104,8 +106,9 @@ Widget detailsContent(News article, context, bool space) {
             padding: const EdgeInsets.all(0),
             onPressed: () async {
               if (await canLaunch(article.url)) {
-                await launch(article.url).catchError(showErrorAlertDialog(
-                    context, "there are a connection error"));
+                await launch(article.url).catchError(
+                  showErrorAlertDialog(context, "there are a connection error"),
+                );
               } else {
                 showErrorAlertDialog(context, "there are a connection error");
               }

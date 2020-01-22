@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:news_me/Models/news.dart';
 import 'package:news_me/my_news_db.dart';
 import 'package:news_me/utilites.dart';
-import 'package:http/http.dart' as http;
 
 class NewsArticles with ChangeNotifier {
   bool _isLoad = true;
   MyNewsTopicsDb _db = MyNewsTopicsDb();
-  static List myTopics = [];
-  static int tabIndex = 0;
   List<News> _topicsNews = List<News>();
   List<News> _allNews = List<News>();
-  static bool dpChanged = false;
   bool _network = true;
 
   bool get isLoading {
@@ -54,8 +52,7 @@ class NewsArticles with ChangeNotifier {
         final String title = item["title"];
         if (title != null &&
             title.length > 5 &&
-            (item["description"] != null ||
-                item["content"] != null) &&
+            (item["description"] != null || item["content"] != null) &&
             item["publishedAt"] != null) {
           News article = News(
             source: Source(source["id"], source["name"]),
@@ -79,20 +76,23 @@ class NewsArticles with ChangeNotifier {
       throw ("error");
     }
     _isLoad = false;
+    _network = true;
     notifyListeners();
     return _allNews;
   }
 
   Future<List> fetchTopicFromDb() async {
-    myTopics = await _db.getAllItem();
+    myTopics = await _db.getAllSavedTopics();
     return myTopics;
   }
 
-  Future<void> fetchTopicsNews() async {
+  Future<void> fetchTopicsNews(bool isRefresh) async {
     _isLoad = true;
     await fetchTopicFromDb();
-    if (myTopics.length != 0) {
-      _topicsNews = [];
+    if (myTopics.length != 0 || isRefresh) {
+      if (!isRefresh) {
+        _topicsNews = [];
+      }
       for (int i = 0; i < myTopics.length; i++) {
         String newsApiUrlForTopic = baseApiForCategory +
             topics[myTopics[i]["topicindex"]] +
@@ -133,6 +133,7 @@ class NewsArticles with ChangeNotifier {
       }
       _network = true;
     } else {
+      _network = true;
       _topicsNews = [];
     }
     _isLoad = false;

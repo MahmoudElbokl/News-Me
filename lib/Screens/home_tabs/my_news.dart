@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:news_me/Models/theme_changer_provider.dart';
+import 'package:news_me/providers/theme_changer_provider.dart';
 import 'package:news_me/utilites.dart';
 import 'package:provider/provider.dart';
 
-import 'package:news_me/Models/news_articles_provider.dart';
+import 'package:news_me/providers/news_articles_provider.dart';
 import 'package:news_me/Screens/edit_my_news.dart';
+import 'package:news_me/widgets/mynews_grid_view.dart';
+import 'package:news_me/widgets/mynews_horizontal_articles.dart';
 import 'package:news_me/Shared_ui/shimmer_list.dart';
-import 'package:news_me/widgets/grid_view_articles.dart';
-import 'package:news_me/widgets/horizontal_articles_scroll.dart';
 
 class MyNews extends StatefulWidget {
   final statusBarSize;
@@ -22,20 +22,33 @@ class MyNews extends StatefulWidget {
 class _MyNewsState extends State<MyNews> {
   bool init = true;
 
+  _onRefresh() async {
+    final provider = Provider.of<NewsArticles>(context, listen: false);
+    print("10");
+    await provider.fetchTopicsNews(true).catchError((error) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        provider.setNetwork(false);
+        provider.setLoad(false);
+        Future.value();
+      });
+    });
+    print("90000");
+    Future.value();
+  }
+
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
     if (init) {
       final provider = Provider.of<NewsArticles>(context, listen: false);
-      if (provider.topicsNews.length == 0 || NewsArticles.dpChanged) {
-        await provider.fetchTopicsNews().catchError((error) {
+      if (provider.topicsNews.length == 0 || dpChanged) {
+        await provider.fetchTopicsNews(false).catchError((error) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            showErrorAlertDialog(
-                "There are a connection error, Please check your internet Connection.",
-                context);
+            provider.setNetwork(false);
+            provider.setLoad(false);
           });
         });
-        NewsArticles.dpChanged = false;
+        dpChanged = false;
       }
     }
     init = false;
@@ -43,19 +56,44 @@ class _MyNewsState extends State<MyNews> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<NewsArticles>(context).isLoading
+    final provider = Provider.of<NewsArticles>(context);
+    final height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    final pullToRefreshColor =
+    Provider
+        .of<ThemeModel>(context, listen: false)
+        .currentTheme ==
+        lightTheme
+        ? Colors.red[100]
+        : Colors.blueGrey;
+    return provider.isLoading
         ? ShimmerList()
-        : !Provider.of<NewsArticles>(context).network
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    "You have a network connection error, Please check your connection",
-                    textAlign: TextAlign.center,
-                  ),
+        : !provider.network
+        ? LiquidPullToRefresh(
+      showChildOpacityTransition: true,
+      color: pullToRefreshColor,
+      springAnimationDurationInMilliseconds: 300,
+      onRefresh: () async {
+        _onRefresh();
+      },
+      child: ListView(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+                left: 15,
+                right: 15,
+                top: (height * 0.5 - 100 - widget.statusBarSize)),
+            child: Text(
+              "You have a network connection error, Please check your connection",
+              textAlign: TextAlign.center,
+            ),
+          )
+        ],
                 ),
               )
-            : Provider.of<NewsArticles>(context).topicsNews.length == 0
+        : provider.topicsNews.length == 0
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
@@ -93,35 +131,15 @@ class _MyNewsState extends State<MyNews> {
                   )
         : LiquidPullToRefresh(
       showChildOpacityTransition: true,
-      color: Provider
-          .of<ThemeModel>(context)
-          .currentTheme ==
-          lightTheme
-          ? Colors.red[100]
-          : Colors.blueGrey,
+      color: pullToRefreshColor,
       springAnimationDurationInMilliseconds: 300,
       onRefresh: () async {
-        await Provider.of<NewsArticles>(context, listen: false)
-            .fetchTopicsNews()
-            .whenComplete(() {
-          Future.value();
-        }).catchError((error) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Future.value();
-            showErrorAlertDialog(
-                "There are a connection error, Please check your internet Connection.",
-                context);
-          });
-        });
+        _onRefresh();
       },
       child: ListView(
         children: <Widget>[
           Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height -
-                (widget.statusBarSize + 100),
+            height: height - (widget.statusBarSize + 100),
             child: Column(
               children: <Widget>[
                 MediaQuery

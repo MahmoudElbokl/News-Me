@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:news_me/Models/news_articles_provider.dart';
+import 'package:news_me/utilites.dart';
 
 class MyNewsTopicsDb {
   Database _db;
@@ -35,11 +35,11 @@ class MyNewsTopicsDb {
     Database dbClient = await db;
     Map<String, int> toMap = {_topicIndex: id};
     int res = await dbClient.insert(_sourcesTable, toMap);
-    NewsArticles.dpChanged = true;
+    dpChanged = true;
     return res;
   }
 
-  Future<List> getAllItem() async {
+  Future<List> getAllSavedTopics() async {
     var dbClient = await db;
     List allItems = await dbClient.query("$_sourcesTable");
     return allItems;

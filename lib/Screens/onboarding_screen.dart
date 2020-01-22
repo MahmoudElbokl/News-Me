@@ -26,7 +26,7 @@ class OnBoardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = PageController(viewportFraction: 0.8);
+    final controller = PageController();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
@@ -63,7 +63,7 @@ class OnBoardingScreen extends StatelessWidget {
                       softWrap: true,
                       textAlign: TextAlign.center,
                     ),
-                    width: size.width * 0.55,
+                    width: size.width * 0.7,
                     padding: EdgeInsets.only(bottom: size.height * 0.1),
                   ),
                 ],

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'package:news_me/Screens/home_tabs/WhatsNew.dart';
 import 'package:news_me/Screens/home_tabs/my_news.dart';
 import 'package:news_me/Screens/edit_my_news.dart';
-import 'package:news_me/Models/news_articles_provider.dart';
-import 'package:news_me/Models/news.dart';
 import 'package:news_me/Shared_ui/main_scaffold.dart';
+import 'package:news_me/providers/theme_changer_provider.dart';
+import 'package:news_me/utilites.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static final routeName = "home_screen";
@@ -18,16 +18,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
-  List<News> trending;
   IconButton icon;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-        initialIndex: NewsArticles.tabIndex, length: 2, vsync: this);
+    _tabController =
+        TabController(initialIndex: tabIndex, length: 2, vsync: this);
     _tabController.addListener(_handleTab);
-    NewsArticles.tabIndex = 0;
+    tabIndex = 0;
   }
 
   _handleTab() {
@@ -47,25 +46,6 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
-//  @override
-//  void didChangeDependencies() async {
-//    super.didChangeDependencies();
-//    if (isInit) {
-//      final provider = Provider.of<NewsArticles>(context, listen: false);
-//      if (provider.allNews.length == 0) {
-//        topNews = await provider.fetchAllNews().catchError((error) {
-//          WidgetsBinding.instance.addPostFrameCallback((_) {
-//            showErrorAlertDialog(
-//                "Please check your internet connection", context);
-//          });
-//        });
-//      } else {
-//        topNews = provider.allNews;
-//      }
-//    }
-//    isInit = false;
-//  }
-
   @override
   void dispose() {
     _tabController.removeListener(_handleTab);
@@ -79,16 +59,21 @@ class _HomeScreenState extends State<HomeScreen>
         .of(context)
         .padding
         .top;
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height;
     return WillPopScope(
       onWillPop: () {
         return showDialog(
           context: (context),
           child: AlertDialog(
-            title: new Text('Do you want to exit this application?'),
+            title: new Text(
+              'Do you want to exit this application?',
+              style: TextStyle(
+                  color: Provider
+                      .of<ThemeModel>(context, listen: false)
+                      .currentTheme ==
+                      lightTheme
+                      ? Colors.black
+                      : Colors.white),
+            ),
             actions: <Widget>[
               new FlatButton(
                 onPressed: () => Navigator.of(context).pop(false),

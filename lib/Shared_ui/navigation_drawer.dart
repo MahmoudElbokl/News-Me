@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:news_me/Models/NavMenuItem.dart';
-import 'package:news_me/Models/theme_changer_provider.dart';
+import 'package:news_me/providers/theme_changer_provider.dart';
 import 'package:news_me/Screens/home_Screen.dart';
 import 'package:news_me/Screens/edit_my_news.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,6 +31,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     return Drawer(
       child: Container(
         color: Provider
@@ -39,26 +40,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             ? Colors.red[100]
             : Colors.grey[850],
         padding: EdgeInsets.only(
-            top: (MediaQuery
-                .of(context)
-                .orientation == Orientation.landscape
-                ? 10
-                : 50)),
+            top: (mediaQuery.orientation == Orientation.landscape ? 10 : 50)),
         child: Column(
           children: <Widget>[
             Container(
-              height:
-              MediaQuery
-                  .of(context)
-                  .orientation == Orientation.landscape
-                  ? MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.3
-                  : MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.2,
+              height: mediaQuery.orientation == Orientation.landscape
+                  ? mediaQuery.size.height * 0.3
+                  : mediaQuery.size.height * 0.2,
               child: Image.asset("assets/images/NewsMe.png"),
             ),
             Expanded(
@@ -72,6 +60,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                           thickness: 3,
                         ),
                         ListTile(
+                          title: Text(
+                            "Dark Theme",
+                          ),
                           onTap: () async {
                             await Provider.of<ThemeModel>(context,
                                 listen: false)
@@ -82,9 +73,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                             darkModeValue = !darkModeValue;
                             Navigator.pop(context);
                           },
-                          title: Text(
-                            "Dark Theme",
-                          ),
                           trailing: Switch(
                               activeColor: Colors.red[400],
                               value: darkModeValue,
@@ -105,6 +93,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     );
                   }
                   return ListTile(
+                    title: Text(
+                      navMenu[index - 1].title,
+                    ),
                     onTap: () {
                       Navigator.pop(context);
                       if (index == 0) {
@@ -115,9 +106,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                             context, navMenu[index - 1].destination);
                       }
                     },
-                    title: Text(
-                      navMenu[index - 1].title,
-                    ),
                     trailing: Icon(Icons.chevron_right),
                   );
                 },

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:news_me/Models/theme_changer_provider.dart';
+import 'package:news_me/providers/theme_changer_provider.dart';
 import 'package:news_me/Screens/article_details_screen.dart';
 import 'package:news_me/Screens/edit_my_news.dart';
 import 'package:news_me/Screens/home_Screen.dart';
 import 'package:news_me/Screens/onboarding_screen.dart';
-import 'package:news_me/Models/news_articles_provider.dart';
-import 'package:news_me/models/mynews_sources_provider.dart';
+import 'package:news_me/providers/news_articles_provider.dart';
+import 'package:news_me/providers/mynews_sources_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

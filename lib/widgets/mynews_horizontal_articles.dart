@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:news_me/Models/news_articles_provider.dart';
+import 'package:news_me/providers/news_articles_provider.dart';
 import 'package:news_me/Screens/article_details_screen.dart';
 
 class HorizontalArticlesScroll extends StatelessWidget {
@@ -67,7 +67,8 @@ class HorizontalArticlesScroll extends StatelessWidget {
                             .textTheme
                             .body2
                             .copyWith(
-                            fontSize: 14, fontWeight: FontWeight.w800),
+                            fontSize: size.height > 700 ? 14 : 12,
+                            fontWeight: FontWeight.w800),
                         textAlign: TextAlign.center,
                         maxLines: 2,
                       ),

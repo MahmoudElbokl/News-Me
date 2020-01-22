@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:news_me/Models/news_articles_provider.dart';
 import 'dart:convert';
-import 'package:queries/collections.dart';
 
 import 'package:news_me/Models/expansion_item.dart';
 import 'package:news_me/Models/news_sources.dart';
@@ -13,14 +11,7 @@ class MyNewsSources with ChangeNotifier {
   MyNewsTopicsDb _db = MyNewsTopicsDb();
   bool _isLoad = true;
   List<NewsSources> _newsSources = [];
-
-  List<Item> _expansionPanelItems = List.generate(topics.length, (index) {
-    return Item(
-      headerValue: topics[index],
-      expandedValue: index.toString(),
-    );
-  });
-
+  Map<int, List<String>> _eachTopicSources = {};
   List<bool> _topicsActivity = [
     false,
     false,
@@ -35,12 +26,21 @@ class MyNewsSources with ChangeNotifier {
     return _isLoad;
   }
 
-  List<NewsSources> get newSources {
-    return [..._newsSources];
-  }
+  List<Item> _expansionPanelItems = List.generate(topics.length, (index) {
+    return Item(
+      headerValue: topics[index],
+      expandedValue: index.toString(),
+    );
+  });
 
   List<Item> get expansionPanelItems {
     return _expansionPanelItems;
+  }
+
+  expandPanel(index) {
+    _expansionPanelItems[index].isExpanded =
+    !_expansionPanelItems[index].isExpanded;
+    notifyListeners();
   }
 
   returnExpansionToFalse() {
@@ -52,17 +52,14 @@ class MyNewsSources with ChangeNotifier {
     });
   }
 
-  expandPanel(index) {
-    _expansionPanelItems[index].isExpanded =
-        !_expansionPanelItems[index].isExpanded;
-    notifyListeners();
+  List<NewsSources> get newSources {
+    return [..._newsSources];
   }
-
-  Map<int, List<String>> _eachTopicSources = {};
 
   Map<int, List<String>> get topicSources {
     return _eachTopicSources;
   }
+
   fetchAllSources() async {
     _isLoad = true;
     if (_newsSources.length > 0) {
@@ -114,36 +111,36 @@ class MyNewsSources with ChangeNotifier {
     }
   }
 
-  int checkCategoriesNumberOfSources(sourceIndex, category) {
-    return Collection(_newsSources).count((item) {
-      return item.category == category;
-    });
-  }
+//  int checkCategoriesNumberOfSources(sourceIndex, category) {
+//    return Collection(_newsSources).count((item) {
+//      return item.category == category;
+//    });
+//  }
 
-  int get numberOfActive {
-    int i = 0;
-    _topicsActivity.forEach((value) {
-      if (value == true) {
-        i++;
-      }
-    });
-    return i;
-  }
+//  int get numberOfActive {
+//    int i = 0;
+//    _topicsActivity.forEach((value) {
+//      if (value == true) {
+//        i++;
+//      }
+//    });
+//    return i;
+//  }
 
-  List<String> get activeTopics {
-    List<String> active = [];
-    int i = -1;
-    _topicsActivity.forEach((value) {
-      i++;
-      if (value == true) {
-        active.add(topics[i]);
-      }
-    });
-    return active;
-  }
+//  List<String> get activeTopics {
+//    List<String> active = [];
+//    int i = -1;
+//    _topicsActivity.forEach((value) {
+//      i++;
+//      if (value == true) {
+//        active.add(topics[i]);
+//      }
+//    });
+//    return active;
+//  }
 
   saveOnDataBase() async {
-    NewsArticles.dpChanged = true;
+    dpChanged = true;
     await _db.deleteTable();
     int i = -1;
     _topicsActivity.forEach((value) {
