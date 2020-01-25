@@ -7,7 +7,8 @@
 </p>
 
 # Preview
-![News-me-app](https://i.imgur.com/iXsmEtY.gif)
+
+![News-me-app](https://i.imgur.com/HER758M.gif)
 
 # ScreenShots
 
