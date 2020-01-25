@@ -8,7 +8,7 @@
 
 # Preview
 
-![News-me-app](https://i.imgur.com/HER758M.gif)
+![News-me-app](https://github.com/MahmoudElbokl/News-Me/blob/master/News%20App%20Preview.gif)
 
 # ScreenShots
 
