@@ -31,7 +31,7 @@
 . News API                                                                                                                                 
 
 # What's next?
-.Splach Screen                                                                                                                           
+Splach Screen                                                                                                                           
 Localization                                                                                                                             
 News based on Location                                                                                                                   
 Favorites articles to read offline                                                                                                       
