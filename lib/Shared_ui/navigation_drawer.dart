@@ -15,7 +15,7 @@ class NavigationDrawer extends StatefulWidget {
 class _NavigationDrawerState extends State<NavigationDrawer> {
   List<NavMenuItem> navMenu = [
     NavMenuItem("Explore", HomeScreen.routeName),
-    NavMenuItem("Edit My News", EditMyNews.routeName),
+    NavMenuItem("My News Topics", EditMyNews.routeName),
   ];
   bool darkModeValue;
 
@@ -99,8 +99,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     onTap: () {
                       Navigator.pop(context);
                       if (index == 0) {
-                        Navigator.pushReplacementNamed(
-                            context, navMenu[index - 1].destination);
+                        Navigator.popUntil(
+                            context,
+                            ModalRoute.withName(
+                                navMenu[index - 1].destination));
                       } else {
                         Navigator.pushNamed(
                             context, navMenu[index - 1].destination);

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import 'package:news_me/Models/expansion_item.dart';
 import 'package:news_me/Models/news_sources.dart';
 import 'package:news_me/my_news_db.dart';
+import 'package:news_me/services/news_api.dart';
 import 'package:news_me/utilites.dart';
 
 class MyNewsSources with ChangeNotifier {
@@ -12,6 +11,7 @@ class MyNewsSources with ChangeNotifier {
   bool _isLoad = true;
   List<NewsSources> _newsSources = [];
   Map<int, List<String>> _eachTopicSources = {};
+  NewsApi _newsApi = NewsApi();
   List<bool> _topicsActivity = [
     false,
     false,
@@ -61,54 +61,72 @@ class MyNewsSources with ChangeNotifier {
   }
 
   fetchAllSources() async {
-    _isLoad = true;
-    if (_newsSources.length > 0) {
-      for (int i = 0; i < topics.length; i++) {
-        List<String> sourcesTopic = [];
-        _newsSources.forEach((source) {
-          if (source.category == topics[i]) {
-            sourcesTopic.add(source.name);
-          }
-        });
-        _eachTopicSources.putIfAbsent(i, () {
-          return sourcesTopic;
-        });
-      }
-      _isLoad = false;
-      notifyListeners();
-    } else {
-      String sourcesApi = sources + apiKey;
-      final response = await http.get(sourcesApi);
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        var allSources = jsonData["sources"];
-        for (var item in allSources) {
-          _newsSources.add(
-            NewsSources(
-              id: item["id"],
-              name: item["name"],
-              category: item["category"],
-            ),
-          );
+    if (_newsSources.length == 0) {
+      try {
+        _isLoad = true;
+        _newsSources = await _newsApi.fetchAllSources();
+        for (int i = 0; i < topics.length; i++) {
+          List<String> sourcesTopic = [];
+          _newsSources.forEach((source) {
+            if (source.category == topics[i]) {
+              sourcesTopic.add(source.name);
+            }
+          });
+          _eachTopicSources.putIfAbsent(i, () {
+            return sourcesTopic;
+          });
         }
-      } else {
-        _isLoad = false;
-        throw ("error");
-      }
-      for (int i = 0; i < topics.length; i++) {
-        List<String> sourcesTopic = [];
-        _newsSources.forEach((source) {
-          if (source.category == topics[i]) {
-            sourcesTopic.add(source.name);
-          }
-        });
-        _eachTopicSources.putIfAbsent(i, () {
-          return sourcesTopic;
-        });
+      } catch (error) {
       }
       _isLoad = false;
       notifyListeners();
+//      for (int i = 0; i < topics.length; i++) {
+//        List<String> sourcesTopic = [];
+//        _newsSources.forEach((source) {
+//          if (source.category == topics[i]) {
+//            sourcesTopic.add(source.name);
+//          }
+//        });
+//        _eachTopicSources.putIfAbsent(i, () {
+//          return sourcesTopic;
+//        });
+//      }
+//      _isLoad = false;
+//      notifyListeners();
     }
+//    else {
+//      String sourcesApi = sources + apiKey;
+//      final response = await http.get(sourcesApi);
+//      if (response.statusCode == 200) {
+//        final jsonData = jsonDecode(response.body);
+//        var allSources = jsonData["sources"];
+//        for (var item in allSources) {
+//          _newsSources.add(
+//            NewsSources(
+//              id: item["id"],
+//              name: item["name"],
+//              category: item["category"],
+//            ),
+//          );
+//        }
+//      } else {
+//        _isLoad = false;
+//        throw ("error");
+//      }
+//      for (int i = 0; i < topics.length; i++) {
+//        List<String> sourcesTopic = [];
+//        _newsSources.forEach((source) {
+//          if (source.category == topics[i]) {
+//            sourcesTopic.add(source.name);
+//          }
+//        });
+//        _eachTopicSources.putIfAbsent(i, () {
+//          return sourcesTopic;
+//        });
+//      }
+//      _isLoad = false;
+//      notifyListeners();
+//    }
   }
 
 //  int checkCategoriesNumberOfSources(sourceIndex, category) {

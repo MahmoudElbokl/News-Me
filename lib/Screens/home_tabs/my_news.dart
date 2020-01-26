@@ -24,16 +24,16 @@ class _MyNewsState extends State<MyNews> {
 
   _onRefresh() async {
     final provider = Provider.of<NewsArticles>(context, listen: false);
-    print("10");
-    await provider.fetchTopicsNews(true).catchError((error) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        provider.setNetwork(false);
-        provider.setLoad(false);
-        Future.value();
-      });
-    });
-    print("90000");
-    Future.value();
+    await provider.fetchTopicsNews(true);
+
+//    .catchError((error) {
+//      WidgetsBinding.instance.addPostFrameCallback((_) {
+//        provider.setNetwork(false);
+//        provider.setLoad(false);
+//        Future.value();
+//      });
+//    });
+//    Future.delayed(Duration(seconds: 30),);
   }
 
   @override
@@ -42,12 +42,14 @@ class _MyNewsState extends State<MyNews> {
     if (init) {
       final provider = Provider.of<NewsArticles>(context, listen: false);
       if (provider.topicsNews.length == 0 || dpChanged) {
-        await provider.fetchTopicsNews(false).catchError((error) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            provider.setNetwork(false);
-            provider.setLoad(false);
-          });
-        });
+        await provider.fetchTopicsNews(false);
+//        .catchError((error) {
+//          print("43");
+//          WidgetsBinding.instance.addPostFrameCallback((_) {
+//            provider.setNetwork(false);
+//            provider.setLoad(false);
+//          });
+//        });
         dpChanged = false;
       }
     }
@@ -76,7 +78,7 @@ class _MyNewsState extends State<MyNews> {
       color: pullToRefreshColor,
       springAnimationDurationInMilliseconds: 300,
       onRefresh: () async {
-        _onRefresh();
+        return _onRefresh();
       },
       child: ListView(
         children: <Widget>[
@@ -130,11 +132,10 @@ class _MyNewsState extends State<MyNews> {
                     ),
                   )
         : LiquidPullToRefresh(
-      showChildOpacityTransition: true,
       color: pullToRefreshColor,
       springAnimationDurationInMilliseconds: 300,
       onRefresh: () async {
-        _onRefresh();
+        return _onRefresh();
       },
       child: ListView(
         children: <Widget>[

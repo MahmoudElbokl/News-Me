@@ -26,11 +26,16 @@ class EditMyNews extends StatelessWidget {
     return WillPopScope(
       onWillPop: () {
         if (EditMyNews.checkSelectionsChanges.length > 0) {
-          EditMyNews.checkSelectionsChanges = [];
           return showDialog(
               context: context,
               child: AlertDialog(
-                title: Text("Are you want to exit with unsave Changes?"),
+                title: Text(
+                  "Are you want to exit with unsave Changes?",
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .body1,
+                ),
                 actions: <Widget>[
                   new FlatButton(
                     onPressed: () => Navigator.of(context).pop(false),
@@ -38,6 +43,7 @@ class EditMyNews extends StatelessWidget {
                   ),
                   new FlatButton(
                     onPressed: () {
+                      EditMyNews.checkSelectionsChanges = [];
                       cancelChanges(context);
                       return Navigator.of(context).pop(true);
                     },
@@ -51,23 +57,25 @@ class EditMyNews extends StatelessWidget {
         }
       },
       child: MainScaffold(
-          actions: IconButton(
-              icon: Icon(Icons.done),
-              onPressed: () async {
-                if (EditMyNews.checkSelectionsChanges.length > 0) {
-                  EditMyNews.checkSelectionsChanges = [];
-                  await Provider.of<MyNewsSources>(context, listen: false)
-                      .saveOnDataBase();
-                } else {
-                  dpChanged = false;
-                }
-                Provider.of<MyNewsSources>(context, listen: false)
-                    .returnExpansionToFalse();
-                tabIndex = 1;
-                Navigator.pushReplacementNamed(context, HomeScreen.routeName);
-              }),
-          title: "My News Topics",
-          body: AllTopics()),
+        actions: IconButton(
+            icon: Icon(Icons.done),
+            onPressed: () async {
+              if (EditMyNews.checkSelectionsChanges.length > 0) {
+                EditMyNews.checkSelectionsChanges = [];
+                await Provider.of<MyNewsSources>(context, listen: false)
+                    .saveOnDataBase();
+              } else {
+                dpChanged = false;
+              }
+              Provider.of<MyNewsSources>(context, listen: false)
+                  .returnExpansionToFalse();
+              tabIndex = 1;
+              Navigator.popUntil(
+                  context, ModalRoute.withName(HomeScreen.routeName));
+            }),
+        title: "My News Topics",
+        body: AllTopics(),
+      ),
     );
   }
 }

@@ -22,14 +22,16 @@ class _WhatsNewState extends State<WhatsNew> {
 
   _refreshData() async {
     final provider = Provider.of<NewsArticles>(context, listen: false);
-    await provider.fetchAllNews().catchError((error) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        provider.setNetwork(false);
-        provider.setLoad(false);
-        Future.value();
-      });
-    });
-    Future.value();
+    await provider.fetchAllNews();
+//        .catchError((error) {
+//      WidgetsBinding.instance.addPostFrameCallback((_) {
+//        provider.setNetwork(false);
+//        provider.setLoad(false);
+//        print("1534 refresh");
+//        Future.value();
+//      });
+//    });
+//    Future.delayed(Duration(seconds: 1));
   }
 
   @override
@@ -38,12 +40,14 @@ class _WhatsNewState extends State<WhatsNew> {
     if (isInit) {
       final provider = Provider.of<NewsArticles>(context, listen: false);
       if (provider.allNews.length == 0) {
-        await provider.fetchAllNews().catchError((error) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            provider.setNetwork(false);
-            provider.setLoad(false);
-          });
-        });
+        await provider.fetchAllNews();
+//            .catchError((error) {
+//          WidgetsBinding.instance.addPostFrameCallback((_) {
+//            print("After All");
+//            provider.setNetwork(false);
+//            provider.setLoad(false);
+//          });
+//        });
       }
     }
     isInit = false;
@@ -75,7 +79,7 @@ class _WhatsNewState extends State<WhatsNew> {
         .network
         ? LiquidPullToRefresh(
       color: pullToRefreshColor,
-      onRefresh: () {
+      onRefresh: () async {
         return _refreshData();
       },
       springAnimationDurationInMilliseconds: 300,

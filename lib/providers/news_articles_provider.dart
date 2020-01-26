@@ -9,8 +9,8 @@ class NewsArticles with ChangeNotifier {
   NewsApi _newsApi = NewsApi();
   bool _isLoad = true;
   MyNewsTopicsDb _db = MyNewsTopicsDb();
-  List<News> _topicsNews = List<News>();
-  List<News> _allNews = List<News>();
+  List _topicsNews = [];
+  List _allNews = [];
   bool _network = true;
 
   bool get isLoading {
@@ -21,15 +21,15 @@ class NewsArticles with ChangeNotifier {
     return _network;
   }
 
-  setNetwork(bool network) {
-    _network = network;
-    notifyListeners();
-  }
-
-  setLoad(bool loading) {
-    _isLoad = loading;
-    notifyListeners();
-  }
+//  setNetwork(bool network) {
+//    _network = network;
+//    notifyListeners();
+//  }
+//
+//  setLoad(bool loading) {
+//    _isLoad = loading;
+//    notifyListeners();
+//  }
 
   List<News> get allNews {
     return [..._allNews];
@@ -39,7 +39,7 @@ class NewsArticles with ChangeNotifier {
     return [..._topicsNews];
   }
 
-  Future<List<News>> fetchAllNews() async {
+  Future fetchAllNews() async {
     try {
       _isLoad = true;
       _allNews = await _newsApi.fetchAllNews();
@@ -47,12 +47,11 @@ class NewsArticles with ChangeNotifier {
       _isLoad = false;
     } catch (error) {
       _isLoad = false;
-      _network = false;
-      notifyListeners();
-      throw ("error");
+      _network =
+      false; // if this do the thing will delete throw error and setnetwork on WhatsNews
+//      throw ("error");
     }
     notifyListeners();
-    return _allNews;
   }
 
 //  Future<List<News>> fetchAllNews() async {
@@ -102,7 +101,7 @@ class NewsArticles with ChangeNotifier {
     return myTopics;
   }
 
-  Future<void> fetchTopicsNews(bool isRefresh) async {
+  Future fetchTopicsNews(bool isRefresh) async {
     try {
       _isLoad = true;
       await fetchTopicFromDb();
@@ -115,17 +114,18 @@ class NewsArticles with ChangeNotifier {
         _isLoad = false;
       } else {
         _topicsNews = [];
-        _isLoad = false;
         _network = true;
-        notifyListeners();
+        _isLoad = false;
+//        notifyListeners();
       }
-      _network = true;
+//      _network = true;
     } catch (error) {
-      _isLoad = false;
       _network = false;
-      notifyListeners();
-      throw ("error");
+      _isLoad = false;
+//      notifyListeners();
+//      throw ("error");
     }
+    notifyListeners();
   }
 
 //  Future<void> fetchTopicsNews(bool isRefresh) async {

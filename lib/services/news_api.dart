@@ -2,11 +2,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:news_me/Models/news.dart';
+import 'package:news_me/Models/news_sources.dart';
 import 'package:news_me/utilites.dart';
 
 class NewsApi {
-  Future<List<News>> fetchAllNews() async {
-    List _allNews;
+  fetchAllNews() async {
+    List _allNews = [];
     String newsApiUrl = baseApi + apiKey;
     var response = await http.get(newsApiUrl);
     Map<String, dynamic> jsonData = await jsonDecode(response.body);
@@ -36,14 +37,14 @@ class NewsApi {
     return _allNews;
   }
 
-  Future<List> fetchTopicsNews(bool isRefresh) async {
-    List _topicsNews;
+  fetchTopicsNews(bool isRefresh) async {
+    List _topicsNews = [];
     for (int i = 0; i < myTopics.length; i++) {
       String newsApiUrlForTopic =
           baseApiForCategory + topics[myTopics[i]["topicindex"]] + "&" + apiKey;
       var response = await http.get(newsApiUrlForTopic);
-      Map<String, dynamic> jsonData = jsonDecode(response.body);
-      var articles = jsonData["articles"];
+      Map<String, dynamic> jsonData = await jsonDecode(response.body);
+      var articles = await jsonData["articles"];
       for (var item in articles) {
         final source = item["source"];
         if (item["title"] != null ||
@@ -68,5 +69,41 @@ class NewsApi {
       }
     }
     return _topicsNews;
+  }
+
+  Future fetchAllSources() async {
+    String sourcesApi = sources + apiKey;
+    var response = await http.get(sourcesApi);
+    List<NewsSources> _newsSources = [];
+//    if (response.statusCode == 200) {
+    Map<String, dynamic> jsonData = jsonDecode(response.body);
+    var allSources = jsonData["sources"];
+    for (var item in allSources) {
+      _newsSources.add(
+        NewsSources(
+          id: item["id"],
+          name: item["name"],
+          category: item["category"],
+        ),
+      );
+    }
+    return _newsSources;
+//    } else {
+//      _isLoad = false;
+//      throw ("error");
+//    }
+//    for (int i = 0; i < topics.length; i++) {
+//      List<String> sourcesTopic = [];
+//      _newsSources.forEach((source) {
+//        if (source.category == topics[i]) {
+//          sourcesTopic.add(source.name);
+//        }
+//      });
+//      _eachTopicSources.putIfAbsent(i, () {
+//        return sourcesTopic;
+//      });
+//    }
+//    _isLoad = false;
+//    notifyListeners();
   }
 }
