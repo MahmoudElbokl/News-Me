@@ -1,16 +1,41 @@
-# news_me
+# News ME
 
-A new Flutter application.
+#### This app is made using the Flutter framework. Its an mobile app to browse the News from different channels. This app uses an API provided by https://newsapi.org and Provider State Management with Sqlite as a local DataBase.
 
-## Getting Started
+<p align="center">
+  <img width="300" height="300" src="https://i.imgur.com/K1udduL.png">
+</p>
 
-This project is a starting point for a Flutter application.
+# Preview
 
-A few resources to get you started if this is your first Flutter project:
+![News-me-app](https://github.com/MahmoudElbokl/News-Me/blob/master/News%20App%20Preview.gif)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+# ScreenShots
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<p float="left">
+  <img src="https://i.imgur.com/6AX63C8.jpg" width="200" height="450" />
+  <img src="https://i.imgur.com/6pbxhr4.jpg" width="200" height="450" /> 
+  <img src="https://i.imgur.com/OPv2xxM.png" width="200" height="450" />
+</p>
+<p float="left">
+  <img src="https://i.imgur.com/epP43xY.jpg" width="200" height="450" />
+  <img src="https://i.imgur.com/u3iFyQo.jpg" width="300" height="200" /> 
+  <img src="https://i.imgur.com/NtUZEdh.jpg" width="300" height="200" />
+</p>
+
+# Dependencies
+. Provider                                                                                                                               
+. Sqflite                                                                                                                               
+. Shared Preferences                                                                                                                     
+. Url_launcher                                                                                                                           
+. News API                                                                                                                                 
+
+# What's next?
+Splach Screen                                                                                                                           
+Localization                                                                                                                             
+News based on Location                                                                                                                   
+Favorites articles to read offline                                                                                                       
+Reduce data usage mode                                                                                                                   
+Search Box                                                                                                                               
+Improve Design                                                                                                                           
+Animations                                                                                                                                
