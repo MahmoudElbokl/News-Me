@@ -31,10 +31,7 @@ class EditMyNews extends StatelessWidget {
               child: AlertDialog(
                 title: Text(
                   "Are you want to exit with unsave Changes?",
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .body1,
+                  style: Theme.of(context).textTheme.body1,
                 ),
                 actions: <Widget>[
                   new FlatButton(
@@ -70,8 +67,8 @@ class EditMyNews extends StatelessWidget {
               Provider.of<MyNewsSources>(context, listen: false)
                   .returnExpansionToFalse();
               tabIndex = 1;
-              Navigator.popUntil(
-                  context, ModalRoute.withName(HomeScreen.routeName));
+              Navigator.pushNamedAndRemoveUntil(
+                  context, HomeScreen.routeName, (route) => false);
             }),
         title: "My News Topics",
         body: AllTopics(),

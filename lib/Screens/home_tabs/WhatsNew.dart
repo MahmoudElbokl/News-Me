@@ -56,91 +56,58 @@ class _WhatsNewState extends State<WhatsNew> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<NewsArticles>(context, listen: false);
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final orientation = MediaQuery
-        .of(context)
-        .orientation;
+    final height = MediaQuery.of(context).size.height;
+    final orientation = MediaQuery.of(context).orientation;
     final pullToRefreshColor =
-    Provider
-        .of<ThemeModel>(context, listen: false)
-        .currentTheme ==
-        lightTheme
-        ? Colors.red[100]
-        : Colors.blueGrey;
-    return Provider
-        .of<NewsArticles>(context)
-        .isLoading
+        Provider.of<ThemeModel>(context, listen: false).currentTheme ==
+                lightTheme
+            ? Colors.red[100]
+            : Colors.blueGrey;
+    return Provider.of<NewsArticles>(context).isLoading
         ? ShimmerList()
-        : Provider
-        .of<NewsArticles>(context)
-        .network
-        ? LiquidPullToRefresh(
-      color: pullToRefreshColor,
-      onRefresh: () async {
-        return _refreshData();
-      },
-      springAnimationDurationInMilliseconds: 300,
-      child: ListView.builder(
-        itemCount: provider.allNews.length > 16
-            ? 17
-            : provider.allNews.length,
-        itemBuilder: (context, index) {
-          if (provider.allNews[index].title ==
-              provider.allNews[index + 1].title) {
-            return SizedBox
-                .shrink(); // some Api Articles is duplicated so it is a check to delete this duplication
-          }
-          if (index == 0) {
-            return orientation != Orientation.landscape
-                ? DrawWhatsNewsHeader(provider.allNews[index])
-                : SizedBox.shrink();
-          }
-          if (index == 1) {
-            return orientation != Orientation.landscape
-                ? Container(
-              color: Provider
-                  .of<ThemeModel>(context)
-                  .currentTheme ==
-                  darkTheme
-                  ? Colors.grey[850]
-                  : Colors.grey[830],
-              padding: const EdgeInsets.only(left: 10, top: 5),
-              width: double.infinity,
-              child: Text("Top Stories",
-                  style: TextStyle(
-                    fontSize: height > 700 ? 18 : 16,
-                  )),
-            )
-                : SizedBox.shrink();
-          } else {
-            return WhatsNewListView(index);
-          }
-        },
-      ),
-    )
         : LiquidPullToRefresh(
-      springAnimationDurationInMilliseconds: 300,
-      color: pullToRefreshColor,
-      child: ListView(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-                left: 15,
-                right: 15,
-                top: (height * 0.5 - 100 - widget.statusBarSize)),
-            child: Text(
-              "You have a network connection error, Please check your connection",
-              textAlign: TextAlign.center,
-            ),
-          )
-        ],
-      ),
-      onRefresh: () {
-        return _refreshData();
-      },
-    );
+                color: pullToRefreshColor,
+                onRefresh: () async {
+                  return _refreshData();
+                },
+                springAnimationDurationInMilliseconds: 300,
+                child: ListView.builder(
+                  itemCount: provider.allNews.length > 16
+                      ? 17
+                      : provider.allNews.length,
+                  itemBuilder: (context, index) {
+                    if (provider.allNews[index].title ==
+                        provider.allNews[index + 1].title) {
+                      return SizedBox
+                          .shrink(); // some Api Articles is duplicated so it is a check to delete this duplication
+                    }
+                    if (index == 0) {
+                      return orientation != Orientation.landscape
+                          ? DrawWhatsNewsHeader(provider.allNews[index])
+                          : SizedBox.shrink();
+                    }
+                    if (index == 1) {
+                      return orientation != Orientation.landscape
+                          ? Container(
+                              color: Provider.of<ThemeModel>(context)
+                                          .currentTheme ==
+                                      darkTheme
+                                  ? Colors.grey[850]
+                                  : Colors.grey[830],
+                              padding: const EdgeInsets.only(left: 10, top: 5),
+                              width: double.infinity,
+                              child: Text("Top Stories",
+                                  style: TextStyle(
+                                    fontSize: height > 700 ? 18 : 16,
+                                  )),
+                            )
+                          : SizedBox.shrink();
+                    } else {
+                      return WhatsNewListView(index);
+                    }
+                  },
+                ),
+              )
+            ;
   }
 }
