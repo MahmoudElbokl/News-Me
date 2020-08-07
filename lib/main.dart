@@ -1,43 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:news_me/providers/theme_changer_provider.dart';
-import 'package:news_me/Screens/article_details_screen.dart';
-import 'package:news_me/Screens/edit_my_news.dart';
-import 'package:news_me/Screens/home_Screen.dart';
-import 'package:news_me/Screens/onboarding_screen.dart';
-import 'package:news_me/providers/news_articles_provider.dart';
-import 'package:news_me/providers/mynews_sources_provider.dart';
+import 'package:news_me/controllers/theme_changer_provider.dart';
+import 'package:news_me/controllers/news_articles_provider.dart';
+import 'package:news_me/routes.dart';
+import 'package:news_me/services/connectivity_service.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-Widget _screen;
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool seen = prefs.getBool('seen');
-  SharedPreferences _pref = await SharedPreferences.getInstance();
-  darkThemeChoose = _pref.getBool("darktheme");
-  if (darkThemeChoose == null) {
-    darkThemeChoose = false;
-  }
-
-  if (seen == null || seen == false) {
-    _screen = OnBoardingScreen();
-  } else {
-    _screen = HomeScreen();
-  }
-
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-          value: ThemeModel(),
+        ChangeNotifierProvider(
+          create: (context) => ThemeModel(),
         ),
-        ChangeNotifierProvider.value(
-          value: MyNewsSources(),
+        ChangeNotifierProvider(
+          create: (context) => NewsArticlesProvider(),
         ),
-        ChangeNotifierProvider.value(
-          value: NewsArticles(),
+        StreamProvider<bool>(
+          create: (context) =>
+              ConnectivityService().connectionStatusController.stream,
+          lazy: false,
         ),
       ],
       child: MyApp(),
@@ -49,15 +31,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-        HomeScreen.routeName: (c) => HomeScreen(),
-        ArticleDetails.routeName: (c) => ArticleDetails(),
-        EditMyNews.routeName: (c) => EditMyNews(),
-      },
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeModel>(context).currentTheme,
-      title: "News Me",
-      home: _screen,
+      title: "NewsMe",
+      onGenerateRoute: Routes.routeGenerator,
+      initialRoute: "/",
     );
   }
 }
