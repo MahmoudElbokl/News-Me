@@ -54,7 +54,7 @@ class OnBoardingScreen extends StatelessWidget {
                           right: 25),
                       child: Text(
                         onBoardingPages[index].title,
-                        style: Theme.of(context).textTheme.body1,
+                        style: Theme.of(context).textTheme.bodyText1,
                         textAlign: TextAlign.center,
                       )),
                   // page details
@@ -100,7 +100,11 @@ class OnBoardingScreen extends StatelessWidget {
                 child: Text(
                   "Get Started",
                   style:
-                      Theme.of(context).textTheme.body2.copyWith(fontSize: 20),
+                  Theme
+                      .of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(fontSize: 20),
                 ),
                 color: Colors.red,
                 onPressed: () {

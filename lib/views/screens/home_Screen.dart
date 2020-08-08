@@ -6,9 +6,9 @@ import 'package:news_me/controllers/news_articles_provider.dart';
 import 'package:news_me/controllers/theme_changer_provider.dart';
 import 'package:news_me/views/widgets/close_app_dialoge.dart';
 import 'package:news_me/views/widgets/category_button.dart';
-import 'package:news_me/views/widgets/mynews_grid_view.dart';
-import 'package:news_me/views/widgets/mynews_horizontal_articles.dart';
-import 'package:news_me/views/widgets/header_article.dart';
+import 'package:news_me/views/widgets/category_grid_view.dart';
+import 'package:news_me/views/widgets/category_horizontal_articles.dart';
+import 'package:news_me/views/widgets/home_header_article.dart';
 import 'package:news_me/views/widgets/home_articles_list_.dart';
 import 'package:provider/provider.dart';
 
@@ -29,8 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
     "technology",
   ];
 
-  _refreshData() {
-    Provider.of<NewsArticlesProvider>(context, listen: false).fetchAllNews();
+  _refreshData(int page) {
+    Provider.of<NewsArticlesProvider>(context, listen: false)
+        .fetchAllNews(page);
   }
 
   _onCategoryRefresh(bool isRefresh, String topic) {
@@ -38,9 +39,11 @@ class _HomeScreenState extends State<HomeScreen> {
         .fetchTopicsNews(isRefresh, topic);
   }
 
+  int page = 1;
+
   @override
   void initState() {
-    Provider.of<NewsArticlesProvider>(context, listen: false).fetchAllNews();
+    _refreshData(page);
     super.initState();
   }
 
@@ -79,7 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               () {
                             if (_selectedCategory != index) {
                               _selectedCategory = index;
-                              _refreshData();
+                              page = 1;
+                              _refreshData(page);
                             }
                           });
                         }
@@ -102,10 +106,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Theme.of(context).accentColor,
                           springAnimationDurationInMilliseconds: 300,
                           onRefresh: () async {
+                            page = 1;
                             _selectedCategory != 0
                                 ? _onCategoryRefresh(
                                     true, topics[_selectedCategory - 1])
-                                : _refreshData();
+                                : _refreshData(page);
                           },
                           child: _selectedCategory != 0
                               ? ListView(
@@ -127,21 +132,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 )
                               : ListView.builder(
-                                  itemCount: provider.allNews.length > 16
-                                      ? 17
-                                      : provider.allNews.length,
-                                  itemBuilder: (context, index) {
-                                    // some Api Articles is duplicated so it is a check to delete this duplication
-                                    if (provider.allNews[index].title ==
-                                        provider.allNews[index + 1].title) {
-                                      return SizedBox.shrink();
-                                    }
-                                    if (index == 0) {
-                                      return orientation !=
-                                              Orientation.landscape
-                                          ? DrawWhatsNewsHeader(
-                                              provider.allNews[index])
-                                          : SizedBox.shrink();
+                            itemCount: provider.allNews.length > 16
+                                ? 18
+                                : provider.allNews.length + 1,
+                            itemBuilder: (context, index) {
+                              // some Api Articles is duplicated so it is a check to delete this duplication
+                              if (provider.allNews[index].title ==
+                                  provider.allNews[index + 1].title) {
+                                return SizedBox.shrink();
+                              }
+                              if (index == 0) {
+                                return orientation !=
+                                    Orientation.landscape
+                                    ? HomeHeaderArticle(
+                                    provider.allNews[index])
+                                    : SizedBox.shrink();
                                     }
                                     if (index == 1) {
                                       return orientation !=
@@ -153,19 +158,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       darkTheme
                                                   ? Colors.grey[850]
                                                   : Colors.grey[830],
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, top: 5),
-                                              width: double.infinity,
-                                              child: Text("Top Stories",
-                                                  style: TextStyle(
-                                                    fontSize:
-                                                        height > 700 ? 18 : 16,
-                                                  )),
-                                            )
+                                        padding: const EdgeInsets.only(
+                                            left: 10, top: 5),
+                                        width: double.infinity,
+                                        child: Text("Top Stories",
+                                            style: TextStyle(
+                                              fontSize:
+                                              height > 700 ? 18 : 16,
+                                            )),
+                                      )
                                           : SizedBox.shrink();
-                                    } else {
-                                      return WhatsNewListView(index);
                                     }
+                              if (index == 18 ||
+                                  index == provider.allNews.length + 1) {
+                                page++;
+                                _refreshData(page);
+                                return CircularProgressIndicator();
+                              } else {
+                                return HomeArticleListView(index);
+                              }
                                   },
                                 ),
                         ),

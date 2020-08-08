@@ -5,8 +5,9 @@ class NewsApi {
   ApiHelper apiProvider = ApiHelper();
   String apiKey = "apiKey=7f6b8a4ee3f24ad8a969d59ab6b4b535";
 
-  fetchAllNews() async {
-    final response = await apiProvider.get("top-headlines?language=en&$apiKey");
+  fetchAllNews(int page) async {
+    final response =
+        await apiProvider.get("top-headlines?language=en&page=$page$apiKey");
     return newsModelFromMap(response).articles;
   }
 

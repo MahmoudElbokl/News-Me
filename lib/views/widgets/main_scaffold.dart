@@ -18,8 +18,6 @@ class MainScaffold extends StatefulWidget {
 
 class _MainScaffoldState extends State<MainScaffold>
     with SingleTickerProviderStateMixin {
-
-
   bool darkModeValue;
   AnimationController _animationController;
 
@@ -49,7 +47,7 @@ class _MainScaffoldState extends State<MainScaffold>
         return Stack(
           children: <Widget>[
             widget.navigationDrawer == true
-                ? MainDrawer(darkModeValue,toggle)
+                ? MainDrawer(darkModeValue, toggle)
                 : Container(),
             Transform(
               transform: Matrix4.identity()
@@ -84,11 +82,11 @@ class _MainScaffoldState extends State<MainScaffold>
                 ),
                 body: Provider.of<bool>(context)
                     ? Center(
-                      child: Text(
-                        "You have a network connection error, Please check your connection",
-                        textAlign: TextAlign.center,
-                      ),
-                    )
+                        child: Text(
+                          "You have a network connection error, Please check your connection",
+                          textAlign: TextAlign.center,
+                        ),
+                      )
                     : widget.body,
               ),
             ),

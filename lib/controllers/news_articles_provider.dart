@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_me/Models/news_model.dart';
-import 'package:news_me/controllers/news_fetcher.dart';
+import 'package:news_me/controllers/news_api.dart';
 
 class NewsArticlesProvider with ChangeNotifier {
   NewsApi _newsApi = NewsApi();
@@ -20,14 +20,14 @@ class NewsArticlesProvider with ChangeNotifier {
     return [..._topicsNews];
   }
 
-  Future fetchAllNews() async {
+  Future fetchAllNews(int page) async {
     try {
       _isLoad = true;
-      _allNews = await _newsApi.fetchAllNews();
+      _allNews = await _newsApi.fetchAllNews(page);
       _isLoad = false;
     } catch (error) {
       _isLoad = false;
-//      throw ("error");
+      return error;
     }
     notifyListeners();
   }
@@ -38,12 +38,9 @@ class NewsArticlesProvider with ChangeNotifier {
 
       _topicsNews = await _newsApi.fetchTopicsNews(isRefresh, topic);
       _isLoad = false;
-
-//      _network = true;
     } catch (error) {
       _isLoad = false;
-//      notifyListeners();
-//      throw ("error");
+      return error;
     }
     notifyListeners();
   }

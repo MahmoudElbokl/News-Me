@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:news_me/Models/news_model.dart';
-import 'package:news_me/views/article_details_screen.dart';
+import 'package:news_me/views/screens/article_details_screen.dart';
 import 'package:time_formatter/time_formatter.dart';
 
-class DrawWhatsNewsHeader extends StatelessWidget {
+class HomeHeaderArticle extends StatelessWidget {
   final Article news;
 
-  DrawWhatsNewsHeader(this.news);
+  HomeHeaderArticle(this.news);
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +52,10 @@ class DrawWhatsNewsHeader extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       news.source.name,
-                      style: Theme.of(context)
+                      style: Theme
+                          .of(context)
                           .textTheme
-                          .body2
+                          .bodyText2
                           .copyWith(fontSize: height > 700 ? 14 : 10),
                     ),
                     Row(
@@ -69,9 +70,10 @@ class DrawWhatsNewsHeader extends StatelessWidget {
                         ),
                         Text(
                           formatTime(news.publishedAt.millisecondsSinceEpoch),
-                          style: Theme.of(context)
+                          style: Theme
+                              .of(context)
                               .textTheme
-                              .body2
+                              .bodyText2
                               .copyWith(fontSize: height > 700 ? 14 : 10),
                         ),
                       ],

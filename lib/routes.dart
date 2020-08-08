@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:news_me/views/article_details_screen.dart';
-import 'package:news_me/views/home_Screen.dart';
-import 'package:news_me/views/onboarding_screen.dart';
-import 'package:news_me/views/splach_screen.dart';
+import 'package:news_me/views/screens/home_Screen.dart';
+import 'package:news_me/views/screens/onboarding_screen.dart';
+import 'package:news_me/views/screens/splach_screen.dart';
 
 class Routes {
   static Route<dynamic> routeGenerator(RouteSettings settings) {

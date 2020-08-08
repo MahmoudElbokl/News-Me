@@ -8,7 +8,6 @@ class ApiHelper {
   Future<dynamic> get(String endPoint) async {
     var responseJson;
     try {
-      //
       final response = await http.get(_baseUrl + endPoint);
       responseJson = _responseChecker(response);
       debugPrint("$endPoint API $response $responseJson");
@@ -33,7 +32,7 @@ class ApiHelper {
       case 426:
         throw "Please try again later";
       case 500:
-
+        throw "Please try again later";
       default:
         throw "Please try again later";
     }

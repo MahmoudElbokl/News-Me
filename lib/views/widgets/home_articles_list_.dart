@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:news_me/controllers/news_articles_provider.dart';
-import 'package:news_me/views/article_details_screen.dart';
+import 'package:news_me/views/screens/article_details_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:time_formatter/time_formatter.dart';
 
-class WhatsNewListView extends StatelessWidget {
+class HomeArticleListView extends StatelessWidget {
   final int index;
 
-  WhatsNewListView(this.index);
+  HomeArticleListView(this.index);
 
   @override
   Widget build(BuildContext context) {
