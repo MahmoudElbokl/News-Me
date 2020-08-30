@@ -25,7 +25,7 @@ class HorizontalArticlesScroll extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return ArticleDetails(topicsNews[index]);
+                      return ArticleDetails(topicsNews.data[index]);
                     }));
                   },
                   child: Stack(children: <Widget>[
@@ -44,12 +44,12 @@ class HorizontalArticlesScroll extends StatelessWidget {
                             ),
                           )
                         ],
-                        image: topicsNews[index].urlToImage == null
+                        image: topicsNews.data[index].urlToImage == null
                             ? AssetImage("assets/images/news-placeholder.png")
                             : DecorationImage(
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
-                                  topicsNews[index].urlToImage,
+                                  topicsNews.data[index].urlToImage,
                                 ),
                               ),
                         borderRadius: BorderRadius.all(
@@ -62,7 +62,7 @@ class HorizontalArticlesScroll extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       alignment: Alignment.bottomCenter,
                       child: Text(
-                        topicsNews[index].title,
+                        topicsNews.data[index].title,
                         style: Theme.of(context).textTheme.headline1.copyWith(
                             fontSize: size.height > 700 ? 14 : 12,
                             fontWeight: FontWeight.w800),

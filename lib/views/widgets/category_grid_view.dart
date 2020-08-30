@@ -11,11 +11,11 @@ class GridViewArticles extends StatelessWidget {
     final topicsNews =
         Provider.of<NewsArticlesProvider>(context, listen: false).topicsNews;
     return GridView.builder(
-      itemCount: topicsNews.length > 14
+      itemCount: topicsNews.data.length > 14
           ? orientation == Orientation.landscape ? 12 : 10
           : orientation == Orientation.landscape
-              ? topicsNews.length
-              : topicsNews.length - 4,
+              ? topicsNews.data.length
+              : topicsNews.data.length - 4,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: orientation == Orientation.landscape ? 3 : 2,
         childAspectRatio:
@@ -27,7 +27,7 @@ class GridViewArticles extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return ArticleDetails(topicsNews[
+              return ArticleDetails(topicsNews.data[
                   orientation == Orientation.landscape ? index : index + 4]);
             }));
           },
@@ -55,7 +55,8 @@ class GridViewArticles extends StatelessWidget {
                               ),
                             )
                           ],
-                          image: topicsNews[index +
+                          image: topicsNews
+                                      .data[index +
                                           ((orientation ==
                                                   Orientation.landscape)
                                               ? 0
@@ -66,7 +67,8 @@ class GridViewArticles extends StatelessWidget {
                               : DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
-                                    topicsNews[index +
+                                    topicsNews
+                                        .data[index +
                                             ((orientation ==
                                                     Orientation.landscape)
                                                 ? 0
@@ -88,7 +90,8 @@ class GridViewArticles extends StatelessWidget {
                             horizontal: 10,
                           ),
                           child: Text(
-                            topicsNews[index +
+                            topicsNews
+                                .data[index +
                                     ((orientation == Orientation.landscape)
                                         ? 0
                                         : 4)]

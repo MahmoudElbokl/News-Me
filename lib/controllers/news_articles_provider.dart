@@ -1,47 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:news_me/Models/news_model.dart';
 import 'package:news_me/controllers/news_api.dart';
+import 'package:news_me/services/response_classify.dart';
 
 class NewsArticlesProvider with ChangeNotifier {
   NewsApi _newsApi = NewsApi();
   bool _isLoad = true;
-  List<Article> _topicsNews = [];
-  List<Article> _allNews = [];
+  ResponseClassify<List<Article>> topicsNews;
+  ResponseClassify<List<Article>> allNews;
 
   bool get isLoading {
+    print("IsLoading $_isLoad");
     return _isLoad;
-  }
-
-  List<Article> get allNews {
-    return [..._allNews];
-  }
-
-  List<Article> get topicsNews {
-    return [..._topicsNews];
   }
 
   Future fetchAllNews(int page) async {
     try {
       _isLoad = true;
-      _allNews = await _newsApi.fetchAllNews(page);
-      _isLoad = false;
+      allNews = await _newsApi.fetchAllNews(page);
     } catch (error) {
-      _isLoad = false;
-      return error;
+      allNews = ResponseClassify.error("Please Try again later");
+      print("CATCH $error");
     }
+    _isLoad = false;
     notifyListeners();
   }
 
   Future fetchTopicsNews(bool isRefresh, String topic) async {
     try {
       _isLoad = true;
-
-      _topicsNews = await _newsApi.fetchTopicsNews(isRefresh, topic);
-      _isLoad = false;
+      topicsNews = await _newsApi.fetchTopicsNews(isRefresh, topic);
     } catch (error) {
-      _isLoad = false;
-      return error;
+      topicsNews = ResponseClassify.error("Please Try again later");
+      print("CATCH $error");
     }
+    _isLoad = false;
     notifyListeners();
   }
 }

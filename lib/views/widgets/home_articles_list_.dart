@@ -18,8 +18,8 @@ class HomeArticleListView extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return ArticleDetails(provider
-              .allNews[index + (orientation == Orientation.landscape ? 0 : 1)]);
+          return ArticleDetails(provider.allNews
+              .data[index + (orientation == Orientation.landscape ? 0 : 1)]);
         }));
       },
       child: Padding(
@@ -35,7 +35,8 @@ class HomeArticleListView extends StatelessWidget {
                         ((orientation == Orientation.landscape ? 0.25 : 0.15)),
                     width: size.width * 0.3,
                     child: provider
-                                .allNews[index +
+                                .allNews
+                                .data[index +
                                     (orientation == Orientation.landscape
                                         ? 0
                                         : 1)]
@@ -58,7 +59,8 @@ class HomeArticleListView extends StatelessWidget {
                                   "assets/images/news-placeholder.png"),
                               image: NetworkImage(
                                 provider
-                                    .allNews[index +
+                                    .allNews
+                                    .data[index +
                                         (orientation == Orientation.landscape
                                             ? 0
                                             : 1)]
@@ -79,7 +81,8 @@ class HomeArticleListView extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           provider
-                              .allNews[index +
+                              .allNews
+                              .data[index +
                                   (orientation == Orientation.landscape
                                       ? 0
                                       : 1)]
@@ -93,7 +96,8 @@ class HomeArticleListView extends StatelessWidget {
                           children: <Widget>[
                             Text(
                               provider
-                                          .allNews[index +
+                                          .allNews
+                                          .data[index +
                                               (orientation ==
                                                       Orientation.landscape
                                                   ? 0
@@ -103,7 +107,8 @@ class HomeArticleListView extends StatelessWidget {
                                           .length >
                                       20
                                   ? provider
-                                      .allNews[index +
+                                      .allNews
+                                      .data[index +
                                           (orientation == Orientation.landscape
                                               ? 0
                                               : 1)]
@@ -111,7 +116,8 @@ class HomeArticleListView extends StatelessWidget {
                                       .name
                                       .substring(0, 20)
                                   : provider
-                                      .allNews[index +
+                                      .allNews
+                                      .data[index +
                                           (orientation == Orientation.landscape
                                               ? 0
                                               : 1)]
@@ -132,7 +138,8 @@ class HomeArticleListView extends StatelessWidget {
                             ),
                             Text(
                               formatTime(provider
-                                  .allNews[index +
+                                  .allNews
+                                  .data[index +
                                       (orientation == Orientation.landscape
                                           ? 0
                                           : 1)]
