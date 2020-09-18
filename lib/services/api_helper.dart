@@ -8,11 +8,12 @@ class ApiHelper {
   Future<dynamic> get(String endPoint) async {
     var responseJson;
     try {
+      print("$_baseUrl$endPoint");
       final response = await http.get(_baseUrl + endPoint);
       responseJson = _responseChecker(response);
       debugPrint("$endPoint API $response $responseJson");
     } catch (error) {
-      throw "Please try again later";
+      throw error;
     }
     return responseJson;
   }
@@ -24,17 +25,17 @@ class ApiHelper {
         var responseJson = response.body;
         return responseJson;
       case 400:
-        throw "Please try again later";
+        throw response;
       case 401:
-        throw "Please try again later";
+        throw response;
       case 403:
-        throw "Please try again later";
+        throw response;
       case 426:
-        throw "Please try again later";
+        throw response;
       case 500:
-        throw "Please try again later";
+        throw response;
       default:
-        throw "Please try again later";
+        throw response;
     }
   }
 }
